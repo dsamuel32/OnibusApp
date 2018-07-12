@@ -150,3 +150,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
 }
+
+/* EXEMPLO DE PERMISSOES RUNTIME
+final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+    private void insertDummyContactWrapper() {
+        int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_CONTACTS);
+        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {Manifest.permission.WRITE_CONTACTS},
+                    REQUEST_CODE_ASK_PERMISSIONS);
+            return;
+        }
+        insertDummyContact();
+    }
+
+*/
