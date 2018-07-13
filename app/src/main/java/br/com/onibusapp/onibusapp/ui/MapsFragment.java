@@ -1,4 +1,4 @@
-package br.com.onibusapp.onibusapp;
+package br.com.onibusapp.onibusapp.ui;
 
 import android.Manifest;
 import android.content.Context;
@@ -10,11 +10,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,6 +34,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import br.com.onibusapp.onibusapp.R;
+import br.com.onibusapp.onibusapp.domain.Onibus;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -34,6 +55,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
+    private Button btnAtualizar;
+
+    private Set<String> linhas = new HashSet<>();
 
    /* @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +77,77 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         //SupportMapFragment mapFragment = (SupportMapFragment) view.findViewById(R.id.map);
         MapView mapView = (MapView) view.findViewById(R.id.mapaFragment);
+        btnAtualizar = (Button) view.findViewById(R.id.btnAtualizar);
+
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         getMyLocation();
+        inicializaLinhas();
+        btnAtualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLocalizacaoOnibus();
+            }
+        });
         return view;
+    }
+
+    private void inicializaLinhas() {
+        linhas.add("0.006");
+        linhas.add("512.1");
+    }
+
+    private void getLocalizacaoOnibus() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = "http://00224.transdatasmart.com.br:22401/ITS-infoexport/api/Data/VeiculosGTFS";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                       Log.d("SUCESSO", "OK");
+                        Map<String, Object> retMap = new Gson().fromJson(
+                                response, new TypeToken<HashMap<String, Object>>() {}.getType()
+                        );
+                        List<List<String>> resposta = (List<List<String>>) retMap.get("Dados");
+                        mMap.clear();
+                        getMyLocation();
+                        for (List<String> dados : resposta) {
+
+                            if (dados.get(5) != "") {
+                                Onibus onibus = new Onibus();
+                                onibus.setPrefixo(dados.get(0));
+                                onibus.setDataHora(dados.get(1));
+                                onibus.setLatitude(dados.get(2));
+                                onibus.setLongitude(dados.get(3));
+                               // onibus.setDirecao(Long.valueOf(dados.get(4)));
+                                onibus.setLinha(dados.get(5));
+                                onibus.setGtfsLinha(dados.get(6));
+                                onibus.setSentido(dados.get(7));
+
+                                if (linhas.contains(onibus.getLinha())) {
+
+                                    Log.d("MARCANDO", onibus.getLinha());
+                                    LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
+                                    mMap.addMarker(new MarkerOptions().position(localizacao).title(onibus.getLinha() + " - " + onibus.getPrefixo()));
+                                }
+                            }
+
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERRO", error.getMessage());
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 
@@ -144,8 +233,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             LatLng minhaLocalizacao = new LatLng(latitude, longitude);
             /*BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_ponto);*/
             mMap.addMarker(new MarkerOptions().position(minhaLocalizacao).title("Eu estou aqui"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));
+            /*mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));*/
         }
     }
 

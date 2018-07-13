@@ -1,4 +1,4 @@
-package br.com.onibusapp.onibusapp.ui;
+package br.com.onibusapp.onibusapp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,8 +6,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import br.com.onibusapp.onibusapp.MapsFragment;
-import br.com.onibusapp.onibusapp.R;
+import br.com.onibusapp.onibusapp.ui.MapsFragment;
+import br.com.onibusapp.onibusapp.ui.FavoritosFragment;
+import br.com.onibusapp.onibusapp.ui.PesquisarFragment;
 import br.com.onibusapp.onibusapp.utils.FragmentUtil;
 
 public class MainActivity extends AppCompatActivity {
