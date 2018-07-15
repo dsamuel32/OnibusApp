@@ -8,4 +8,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sp_prompt_empresas">Selecione uma empresa</string>
+    <string name="sp_prompt_linha">Selecione uma linha</string>
+    <string name="cbx_add_favoritos">Adicionar aos favoritos</string>
+    <string name="btn_pesquisar">Pesquisar</string>
+
+
+    <string-array name="empresas">
+        <item>Marechal</item>
+        <item>Pioneira</item>
+        <item>Piracicabana</item>
+        <item>São José</item>
+    </string-array>
 </resources>

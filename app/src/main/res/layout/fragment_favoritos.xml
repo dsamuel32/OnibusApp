@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.onibusapp.onibusapp.ui.FavoritosFragment">
+    tools:context="br.com.onibusapp.onibusapp.ui.favoritos.FavoritosFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

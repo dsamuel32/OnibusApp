@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import br.com.onibusapp.onibusapp.ui.MapsFragment;
-import br.com.onibusapp.onibusapp.ui.FavoritosFragment;
-import br.com.onibusapp.onibusapp.ui.PesquisarFragment;
+import br.com.onibusapp.onibusapp.ui.favoritos.FavoritosFragment;
+import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarFragment;
 import br.com.onibusapp.onibusapp.utils.FragmentUtil;
 
 public class MainActivity extends AppCompatActivity {
