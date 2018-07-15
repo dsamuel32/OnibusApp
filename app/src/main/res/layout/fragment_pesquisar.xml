@@ -28,14 +28,14 @@
             android:layout_marginBottom="10dp"/>
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/cbx_add_favoritos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/cbx_add_favoritos" />
 
         <Button
-            android:id="@+id/btnPesquisar"
+            android:id="@+id/btn_pesquisar"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

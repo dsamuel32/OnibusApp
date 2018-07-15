@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class PesquisarFragment extends Fragment {
     private PesquisarPresenter pesquisarPresenter;
     private Spinner spEmpresa;
     private Spinner spLinha;
+    private CheckBox cbxAddFavorititos;
+    private Button btnPesquisar;
     private List<Linha> linhas;
 
     private ArrayAdapter<String> linhaDataAdapter;
@@ -36,6 +40,8 @@ public class PesquisarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pesquisar, container, false);
         spEmpresa = (Spinner) view.findViewById(R.id.sp_empresa);
         spLinha = (Spinner) view.findViewById(R.id.sp_linha);
+        cbxAddFavorititos = (CheckBox) view.findViewById(R.id.cbx_add_favoritos);
+        btnPesquisar = (Button) view.findViewById(R.id.btn_pesquisar);
         linhas = inicializaListaLinhas();
         createAdapter(1);
         addEventos();
@@ -58,6 +64,25 @@ public class PesquisarFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        spLinha.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                linhaSelecionada = linhas.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btnPesquisar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
             }
         });
     }
