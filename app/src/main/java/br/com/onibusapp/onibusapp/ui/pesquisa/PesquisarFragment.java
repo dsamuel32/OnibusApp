@@ -25,6 +25,7 @@ public class PesquisarFragment extends Fragment {
     private PesquisarPresenter pesquisarPresenter;
     private Spinner spEmpresa;
     private Spinner spLinha;
+    private Spinner spSentido;
     private CheckBox cbxAddFavorititos;
     private Button btnPesquisar;
     private List<Linha> linhas;
@@ -40,6 +41,7 @@ public class PesquisarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pesquisar, container, false);
         spEmpresa = (Spinner) view.findViewById(R.id.sp_empresa);
         spLinha = (Spinner) view.findViewById(R.id.sp_linha);
+        spSentido = (Spinner) view.findViewById(R.id.sp_sentido);
         cbxAddFavorititos = (CheckBox) view.findViewById(R.id.cbx_add_favoritos);
         btnPesquisar = (Button) view.findViewById(R.id.btn_pesquisar);
         linhas = inicializaListaLinhas();
@@ -82,7 +84,7 @@ public class PesquisarFragment extends Fragment {
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
             }
         });
     }

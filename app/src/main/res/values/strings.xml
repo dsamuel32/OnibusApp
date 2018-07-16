@@ -20,4 +20,9 @@
         <item>Piracicabana</item>
         <item>São José</item>
     </string-array>
+
+    <string-array name="sentido">
+        <item>Ida</item>
+        <item>Volta</item>
+    </string-array>
 </resources>

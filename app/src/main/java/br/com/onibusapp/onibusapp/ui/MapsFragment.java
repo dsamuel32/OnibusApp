@@ -37,8 +37,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -128,7 +126,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                                 onibus.setSentido(dados.get(7));
 
                                 if (linhas.contains(onibus.getLinha())) {
-
                                     Log.d("MARCANDO", onibus.getLinha());
                                     LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
                                     mMap.addMarker(new MarkerOptions().position(localizacao).title(onibus.getLinha() + " - " + onibus.getPrefixo()));
@@ -164,23 +161,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
         if (haveLocationPermission(getActivity())) {
             try {
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setMapToolbarEnabled(true);
-
                 mMap.setMyLocationEnabled(true);
-                /*LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
                 getMyLocation();
             } catch (SecurityException e) {
                 Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG);
             }
         }
-
-        // Add a marker in Sydney and move the camera
 
     }
 
@@ -231,10 +221,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private void getLocalizacao(Double latitude, Double longitude) {
         if (mMap != null) {
             LatLng minhaLocalizacao = new LatLng(latitude, longitude);
-            /*BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_ponto);*/
-            mMap.addMarker(new MarkerOptions().position(minhaLocalizacao).title("Eu estou aqui"));
-            /*mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));*/
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));
         }
     }
 
