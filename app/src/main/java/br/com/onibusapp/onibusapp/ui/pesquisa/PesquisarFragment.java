@@ -1,7 +1,6 @@
 package br.com.onibusapp.onibusapp.ui.pesquisa;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +15,7 @@ import android.widget.Spinner;
 import java.util.List;
 
 import br.com.onibusapp.onibusapp.R;
-import br.com.onibusapp.onibusapp.domain.Linha;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import br.com.onibusapp.onibusapp.domain.Filtro;
 
 
 public class PesquisarFragment extends Fragment implements PesquisarContract.View {
@@ -30,11 +27,8 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
     private Spinner spSentido;
     private CheckBox cbxAddFavorititos;
     private Button btnPesquisar;
-    private List<Linha> linhas;
 
     private ArrayAdapter<String> linhaDataAdapter;
-
-    private Linha linhaSelecionada;
 
 
     @Override
@@ -47,42 +41,17 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
         cbxAddFavorititos = (CheckBox) view.findViewById(R.id.cbx_add_favoritos);
         btnPesquisar = (Button) view.findViewById(R.id.btn_pesquisar);
         mPresenter = new PesquisarPresenter(this);
+        mPresenter.createDefaultAdapterLinha();
 
-        linhas = mPresenter.getLinhas();
-
-        createDefaultAdapterLinha(1);
         addEventos();
         return view;
-    }
-
-    @Override
-    public void setPresenter(@NonNull PesquisarContract.Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
     }
 
     private void addEventos() {
         spEmpresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Selecionou", position + "");
-                Integer empresaSelecionada = position + 1;
-                List<String> nomes = mPresenter.filtrarLinhas(empresaSelecionada);
-                linhaDataAdapter.clear();
-                linhaDataAdapter.addAll(nomes);
-                linhaDataAdapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spLinha.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                linhaSelecionada = mPresenter.selecionarLinha(position);
+                mPresenter.selecionarEmpresa(position);
             }
 
             @Override
@@ -94,18 +63,32 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mPresenter.pesquisar();
             }
         });
     }
 
-    private void createDefaultAdapterLinha(Integer codigoEmpresa) {
 
-        List<String> nomes = mPresenter.filtrarLinhas(codigoEmpresa);
-        linhaDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, nomes);
+    @Override
+    public void atualizarSpinnerLinha(List<String> nomes) {
+        linhaDataAdapter.clear();
+        linhaDataAdapter.addAll(nomes);
+        linhaDataAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void createDefaultAdapterLinha(List<String> linhas) {
+        linhaDataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, linhas);
         linhaDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spLinha.setAdapter(linhaDataAdapter);
+    }
 
+    @Override
+    public Filtro selecionarFiltros() {
+        String linha = spLinha.getSelectedItem().toString();
+        Integer sentido = spSentido.getSelectedItemPosition();
+        Boolean adicionarFavoritos = cbxAddFavorititos.isChecked();
+        return new Filtro(linha, sentido, adicionarFavoritos);
     }
 
 }

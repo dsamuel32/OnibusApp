@@ -1,11 +1,13 @@
 package br.com.onibusapp.onibusapp.ui.pesquisa;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import br.com.onibusapp.onibusapp.domain.Filtro;
 import br.com.onibusapp.onibusapp.domain.Linha;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,16 +23,17 @@ public class PesquisarPresenter implements PesquisarContract.Presenter {
 
     public PesquisarPresenter(@NonNull PesquisarContract.View mPesquisarView) {
         this.mPesquisarView = checkNotNull(mPesquisarView, "mPesquisarView cannot be null!");
-        mPesquisarView.setPresenter(this);
+        this.linhas = inicializaListaLinhas();
     }
 
     @Override
-    public void start() {
-        linhas = inicializaListaLinhas();
+    public void selecionarEmpresa(Integer position) {
+        Integer codigoEmpresa = position + 1;
+        List<String> nomeLinhas = filtrarLinhas(codigoEmpresa);
+        mPesquisarView.atualizarSpinnerLinha(nomeLinhas);
     }
 
-    @Override
-    public List<String> filtrarLinhas(Integer codigoEmpresa) {
+    private List<String> filtrarLinhas(Integer codigoEmpresa) {
         List<String> nomes = linhas.stream().filter(linha -> linha.getCodigoEmpresa().equals(codigoEmpresa))
                 .map(linha -> linha.getNumero())
                 .collect(Collectors.toList());
@@ -42,13 +45,15 @@ public class PesquisarPresenter implements PesquisarContract.Presenter {
     }
 
     @Override
-    public List<Linha> getLinhas() {
-        return this.linhas;
+    public void createDefaultAdapterLinha() {
+        List<String> linhas = filtrarLinhas(1);
+        this.mPesquisarView.createDefaultAdapterLinha(linhas);
     }
 
     @Override
-    public Linha selecionarLinha(Integer position) {
-        return this.linhas.get(position);
+    public void pesquisar() {
+        Filtro filtro = mPesquisarView.selecionarFiltros();
+        Log.d("Filtros", filtro.toString());
     }
 
     private List<Linha> inicializaListaLinhas() {
