@@ -1,6 +1,7 @@
 package br.com.onibusapp.onibusapp.ui.pesquisa;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,17 +13,18 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import br.com.onibusapp.onibusapp.R;
 import br.com.onibusapp.onibusapp.domain.Linha;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PesquisarFragment extends Fragment {
 
-    private PesquisarPresenter pesquisarPresenter;
+public class PesquisarFragment extends Fragment implements PesquisarContract.View {
+
+    private PesquisarContract.Presenter mPresenter;
+
     private Spinner spEmpresa;
     private Spinner spLinha;
     private Spinner spSentido;
@@ -44,10 +46,18 @@ public class PesquisarFragment extends Fragment {
         spSentido = (Spinner) view.findViewById(R.id.sp_sentido);
         cbxAddFavorititos = (CheckBox) view.findViewById(R.id.cbx_add_favoritos);
         btnPesquisar = (Button) view.findViewById(R.id.btn_pesquisar);
-        linhas = inicializaListaLinhas();
-        createAdapter(1);
+        mPresenter = new PesquisarPresenter(this);
+
+        linhas = mPresenter.getLinhas();
+
+        createDefaultAdapterLinha(1);
         addEventos();
         return view;
+    }
+
+    @Override
+    public void setPresenter(@NonNull PesquisarContract.Presenter presenter) {
+        mPresenter = checkNotNull(presenter);
     }
 
     private void addEventos() {
@@ -56,7 +66,7 @@ public class PesquisarFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("Selecionou", position + "");
                 Integer empresaSelecionada = position + 1;
-                List<String> nomes = filtrarLinhas(empresaSelecionada);
+                List<String> nomes = mPresenter.filtrarLinhas(empresaSelecionada);
                 linhaDataAdapter.clear();
                 linhaDataAdapter.addAll(nomes);
                 linhaDataAdapter.notifyDataSetChanged();
@@ -72,7 +82,7 @@ public class PesquisarFragment extends Fragment {
         spLinha.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                linhaSelecionada = linhas.get(position);
+                linhaSelecionada = mPresenter.selecionarLinha(position);
             }
 
             @Override
@@ -89,34 +99,13 @@ public class PesquisarFragment extends Fragment {
         });
     }
 
-    private List<Linha> inicializaListaLinhas() {
-        List<Linha> linhas = new ArrayList<>();
-        linhas.add(new Linha("0.006", 3));
-        linhas.add(new Linha("512.1", 3));
-        linhas.add(new Linha("0.512", 3));
-        return linhas;
-    }
+    private void createDefaultAdapterLinha(Integer codigoEmpresa) {
 
-    private void createAdapter(Integer codigoEmpresa) {
-
-        List<String> nomes = filtrarLinhas(codigoEmpresa);
-
+        List<String> nomes = mPresenter.filtrarLinhas(codigoEmpresa);
         linhaDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, nomes);
-
         linhaDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spLinha.setAdapter(linhaDataAdapter);
+
     }
-
-    private List<String> filtrarLinhas(Integer codigoEmpresa) {
-        List<String> nomes = linhas.stream().filter(linha -> linha.getCodigoEmpresa().equals(codigoEmpresa))
-                .map(linha -> linha.getNumero())
-                .collect(Collectors.toList());
-
-        if (nomes.isEmpty()) {
-            nomes.add("Nenhuma linha encotrada");
-        }
-        return nomes;
-    }
-
 
 }

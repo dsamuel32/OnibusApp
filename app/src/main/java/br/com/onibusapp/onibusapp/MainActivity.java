@@ -3,17 +3,20 @@ package br.com.onibusapp.onibusapp;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import br.com.onibusapp.onibusapp.ui.MapsFragment;
 import br.com.onibusapp.onibusapp.ui.favoritos.FavoritosFragment;
 import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarFragment;
+import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarPresenter;
 import br.com.onibusapp.onibusapp.utils.FragmentUtil;
 
 public class MainActivity extends AppCompatActivity {
 
     private FragmentUtil fragmentUtil;
+    private PesquisarPresenter pesquisarPresenter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -25,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
                     fragmentUtil.mudarTela(new MapsFragment());
                     return true;
                 case R.id.navigation_dashboard:
-                    fragmentUtil.mudarTela(new PesquisarFragment());
+                    PesquisarFragment pesquisarFragment = new PesquisarFragment();
+                    pesquisarPresenter = new PesquisarPresenter(pesquisarFragment);
+                    fragmentUtil.mudarTela(pesquisarFragment);
                     return true;
                 case R.id.navigation_notifications:
                     fragmentUtil.mudarTela(new FavoritosFragment());
