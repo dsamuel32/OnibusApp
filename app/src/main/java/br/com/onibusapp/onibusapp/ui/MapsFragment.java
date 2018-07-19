@@ -81,7 +81,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapView.onResume();
         mapView.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        getMyLocation();
         inicializaLinhas();
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +110,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                         );
                         List<List<String>> resposta = (List<List<String>>) retMap.get("Dados");
                         mMap.clear();
-                        getMyLocation();
+                        getMyLocation(false);
                         for (List<String> dados : resposta) {
 
                             if (dados.get(5) != "") {
@@ -166,7 +165,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setMapToolbarEnabled(true);
                 mMap.setMyLocationEnabled(true);
-                getMyLocation();
+                getMyLocation(true);
             } catch (SecurityException e) {
                 Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG);
             }
@@ -194,7 +193,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void getMyLocation() {
+    private void getMyLocation(Boolean focarMinhaLocalizacao) {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -212,17 +211,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            getLocalizacao(location.getLatitude(), location.getLongitude());
+                            getLocalizacao(location.getLatitude(), location.getLongitude(), focarMinhaLocalizacao);
                         }
                     }
                 });
     }
 
-    private void getLocalizacao(Double latitude, Double longitude) {
+    private void getLocalizacao(Double latitude, Double longitude, Boolean focarMinhaLocalizacao) {
         if (mMap != null) {
             LatLng minhaLocalizacao = new LatLng(latitude, longitude);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));
+            if (focarMinhaLocalizacao) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));
+            }
         }
     }
 

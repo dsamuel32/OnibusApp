@@ -2,7 +2,6 @@ package br.com.onibusapp.onibusapp.ui.pesquisa;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,9 @@ import android.widget.Spinner;
 import java.util.List;
 
 import br.com.onibusapp.onibusapp.R;
-import br.com.onibusapp.onibusapp.domain.Filtro;
+import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO;
+import br.com.onibusapp.onibusapp.data.dao.LinhaDAO;
+import br.com.onibusapp.onibusapp.data.dominio.Filtro;
 
 
 public class PesquisarFragment extends Fragment implements PesquisarContract.View {
@@ -30,6 +31,9 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
 
     private ArrayAdapter<String> linhaDataAdapter;
 
+    private LinhaDAO linhaDAO;
+    private FavoritoDAO favoritoDAO;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +44,9 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
         spSentido = (Spinner) view.findViewById(R.id.sp_sentido);
         cbxAddFavorititos = (CheckBox) view.findViewById(R.id.cbx_add_favoritos);
         btnPesquisar = (Button) view.findViewById(R.id.btn_pesquisar);
-        mPresenter = new PesquisarPresenter(this);
+        linhaDAO = new LinhaDAO(getActivity());
+        favoritoDAO = new FavoritoDAO(getActivity());
+        mPresenter = new PesquisarPresenter(this, linhaDAO, favoritoDAO);
         mPresenter.createDefaultAdapterLinha();
 
         addEventos();
@@ -48,6 +54,11 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
     }
 
     private void addEventos() {
+        addEventoSelecionarEmpresa();
+        addPesquisarEventos();
+    }
+
+    private void addEventoSelecionarEmpresa() {
         spEmpresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -59,7 +70,9 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
 
             }
         });
+    }
 
+    private void addPesquisarEventos() {
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +99,11 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
     @Override
     public Filtro selecionarFiltros() {
         String linha = spLinha.getSelectedItem().toString();
+
+        if (linha.equals(PesquisarContract.Presenter.NENHUMA_LINHA_ENCONTRADA)) {
+
+        }
+
         Integer sentido = spSentido.getSelectedItemPosition();
         Boolean adicionarFavoritos = cbxAddFavorititos.isChecked();
         return new Filtro(linha, sentido, adicionarFavoritos);

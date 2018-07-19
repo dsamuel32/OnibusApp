@@ -3,12 +3,14 @@ package br.com.onibusapp.onibusapp.ui.pesquisa;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import br.com.onibusapp.onibusapp.domain.Filtro;
-import br.com.onibusapp.onibusapp.domain.Linha;
+import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO;
+import br.com.onibusapp.onibusapp.data.dao.LinhaDAO;
+import br.com.onibusapp.onibusapp.data.dominio.Favorito;
+import br.com.onibusapp.onibusapp.data.dominio.Filtro;
+import br.com.onibusapp.onibusapp.data.dominio.Linha;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,48 +21,69 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class PesquisarPresenter implements PesquisarContract.Presenter {
 
     private final PesquisarContract.View mPesquisarView;
+    private final LinhaDAO linhaDAO;
+    private final FavoritoDAO favoritoDAO;
     private List<Linha> linhas;
 
-    public PesquisarPresenter(@NonNull PesquisarContract.View mPesquisarView) {
+    public PesquisarPresenter(@NonNull PesquisarContract.View mPesquisarView,
+                              @NonNull LinhaDAO linhaDAO,
+                              @NonNull FavoritoDAO favoritoDAO) {
         this.mPesquisarView = checkNotNull(mPesquisarView, "mPesquisarView cannot be null!");
-        this.linhas = inicializaListaLinhas();
+        this.linhaDAO = checkNotNull(linhaDAO);
+        this.favoritoDAO = checkNotNull(favoritoDAO);
     }
 
     @Override
     public void selecionarEmpresa(Integer position) {
         Integer codigoEmpresa = position + 1;
-        List<String> nomeLinhas = filtrarLinhas(codigoEmpresa);
+        linhas = linhaDAO.findByCodigoEmpresa(codigoEmpresa);
+        List<String> nomeLinhas = montarListaNomeLinhas(linhas);
         mPesquisarView.atualizarSpinnerLinha(nomeLinhas);
     }
 
-    private List<String> filtrarLinhas(Integer codigoEmpresa) {
-        List<String> nomes = linhas.stream().filter(linha -> linha.getCodigoEmpresa().equals(codigoEmpresa))
-                .map(linha -> linha.getNumero())
+    private List<String> montarListaNomeLinhas(List<Linha> linhas) {
+        List<String> nomes = linhas.stream().map(linha -> linha.getNumero())
                 .collect(Collectors.toList());
 
         if (nomes.isEmpty()) {
-            nomes.add("Nenhuma linha encotrada");
+            nomes.add(NENHUMA_LINHA_ENCONTRADA);
         }
         return nomes;
     }
 
     @Override
     public void createDefaultAdapterLinha() {
-        List<String> linhas = filtrarLinhas(1);
-        this.mPesquisarView.createDefaultAdapterLinha(linhas);
+        linhas = linhaDAO.findByCodigoEmpresa(1);
+        List<String> numeroLinhas = montarListaNomeLinhas(linhas);
+        this.mPesquisarView.createDefaultAdapterLinha(numeroLinhas);
     }
 
     @Override
     public void pesquisar() {
         Filtro filtro = mPesquisarView.selecionarFiltros();
+
+        if (filtro.getAdicionarFavoritos()) {
+            Integer idLinha = recuperarIdLinha(filtro.getLinha());
+            Favorito favorito = new Favorito(idLinha, filtro.getSentido());
+            favorito = favoritoDAO.salvar(favorito);
+            Log.d("Favorito", favorito.toString());
+        }
+
         Log.d("Filtros", filtro.toString());
     }
 
+    private Integer recuperarIdLinha(String numero) {
+        List<Integer> ids = linhas.stream().filter(linha -> linha.getNumero().equals(numero))
+                              .map(linha ->  linha.getId())
+                              .collect(Collectors.toList());
+
+        if (!ids.isEmpty()) {
+            return ids.get(0);
+        }
+        return null;
+    }
+
     private List<Linha> inicializaListaLinhas() {
-        List<Linha> linhas = new ArrayList<>();
-        linhas.add(new Linha("0.006", 3));
-        linhas.add(new Linha("512.1", 3));
-        linhas.add(new Linha("0.512", 3));
-        return linhas;
+        return linhaDAO.findAll();
     }
 }

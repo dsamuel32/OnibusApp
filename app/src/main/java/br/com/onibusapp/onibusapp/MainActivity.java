@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import br.com.onibusapp.onibusapp.data.ScriptDB;
 import br.com.onibusapp.onibusapp.ui.MapsFragment;
 import br.com.onibusapp.onibusapp.ui.favoritos.FavoritosFragment;
 import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarFragment;
@@ -14,6 +15,7 @@ import br.com.onibusapp.onibusapp.utils.FragmentUtil;
 public class MainActivity extends AppCompatActivity {
 
     private FragmentUtil fragmentUtil;
+    private ScriptDB scriptDB;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         this.fragmentUtil = FragmentUtil.getInstance(getSupportFragmentManager());
         inicializaTelaMapa();
+        scriptDB = new ScriptDB(this);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package br.com.onibusapp.onibusapp.domain;
+package br.com.onibusapp.onibusapp.data.dominio;
 
 import java.io.Serializable;
 
