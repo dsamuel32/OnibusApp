@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:entries="@array/empresas"
             android:prompt="@string/sp_prompt_empresas"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="15dp"/>
 
         <Spinner
