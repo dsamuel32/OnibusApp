@@ -3,24 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_item_relative_layout"
     android:layout_width="fill_parent"
-    android:layout_height="65dp"
+    android:layout_height="75dp"
     android:padding="10dp">
 
     <TextView
         android:id="@+id/txt_sentido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="I/V" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/circulo_background"
+        android:gravity="center"
+        android:text="I/V"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/txt_linha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/txt_sentido"
-        android:text="0.006" />
+        android:text="0.006"
+        android:textAlignment="center"
+        android:textSize="30sp"/>
 
     <View
         android:id="@+id/vw_divider"
