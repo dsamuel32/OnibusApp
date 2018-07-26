@@ -35,8 +35,8 @@ public class FavoritoRecicleViewAdapter extends RecyclerView.Adapter<FavoritoVie
     }
 
     @Override
-    public void onBindViewHolder(FavoritoViewHolder audiAuidoViewHolder, int position) {
-        audiAuidoViewHolder.setFavorito(this.favoritos.get(position));
+    public void onBindViewHolder(FavoritoViewHolder viewHolder, int position) {
+        viewHolder.setFavorito(this.favoritos.get(position));
     }
 
     @Override
@@ -46,5 +46,21 @@ public class FavoritoRecicleViewAdapter extends RecyclerView.Adapter<FavoritoVie
 
     public void setRecyclerViewOnClickListener(RecyclerViewOnClickListener recyclerViewOnClickListener) {
         this.recyclerViewOnClickListener = recyclerViewOnClickListener;
+    }
+
+    public void updateData(List<Favorito> favoritos) {
+        this.favoritos.clear();
+        this.favoritos.addAll(favoritos);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(int position, Favorito favorito) {
+        this.favoritos.add(position, favorito);
+        notifyItemInserted(position);
+    }
+
+    public void removeItem(int position) {
+        this.favoritos.remove(position);
+        notifyItemRemoved(position);
     }
 }

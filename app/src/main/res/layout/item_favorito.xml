@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_item_relative_layout"
     android:layout_width="fill_parent"
-    android:layout_height="75dp"
-    android:padding="10dp">
+    android:layout_height="85dp">
 
     <TextView
         android:id="@+id/txt_sentido"
@@ -16,6 +15,9 @@
         android:background="@drawable/circulo_background"
         android:gravity="center"
         android:text="I/V"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
         android:textColor="@android:color/white"
         android:textSize="30sp" />
 
@@ -30,13 +32,16 @@
         android:textAlignment="center"
         android:textSize="30sp"/>
 
+
     <View
         android:id="@+id/vw_divider"
-        android:layout_below="@+id/txt_sentido"
-        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_height="0.08dp"
+        android:layout_below="@+id/txt_linha"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/colorPrimaryDark" />
 
 
 </RelativeLayout>

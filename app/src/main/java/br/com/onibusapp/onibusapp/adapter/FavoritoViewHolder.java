@@ -23,6 +23,7 @@ public class FavoritoViewHolder extends RecyclerView.ViewHolder implements View.
         this.txtLinha = itemView.findViewById(R.id.txt_linha);
         this.recyclerViewOnClickListener = recyclerViewOnClickListener;
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class FavoritoViewHolder extends RecyclerView.ViewHolder implements View.
     @Override
     public boolean onLongClick(View v) {
         if (this.recyclerViewOnClickListener != null)
-            this.recyclerViewOnClickListener.onLongPressClickListener(v, getPosition());
+            this.recyclerViewOnClickListener.onLongPressClickListener(v, getLayoutPosition());
         return false;
     }
 

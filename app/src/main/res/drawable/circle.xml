@@ -5,8 +5,8 @@
     <solid android:color="@color/colorPrimaryDark" />
 
     <size
-        android:height="50dp"
-        android:width="50dp" />
+        android:height="60dp"
+        android:width="60dp" />
 
     <stroke
         android:width="2dp"
