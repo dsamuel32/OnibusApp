@@ -1,4 +1,4 @@
-package br.com.onibusapp.onibusapp;
+package br.com.onibusapp.onibusapp.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -6,6 +6,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+
+import br.com.onibusapp.onibusapp.R;
 
 /**
  * Created by diego on 26/07/2018.

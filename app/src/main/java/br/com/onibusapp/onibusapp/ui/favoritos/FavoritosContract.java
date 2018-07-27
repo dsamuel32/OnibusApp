@@ -21,5 +21,7 @@ public interface FavoritosContract {
     interface Presenter {
 
         void apagar(Integer posicao);
+
+        void carregarMapa(Integer posicao);
     }
 }

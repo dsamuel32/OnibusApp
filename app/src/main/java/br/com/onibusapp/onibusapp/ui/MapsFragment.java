@@ -88,7 +88,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 getLocalizacaoOnibus();
             }
         });
+        getParametros();
         return view;
+    }
+
+    private void getParametros() {
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            String linha = bundle.getString("linha");
+            Integer sentido = bundle.getInt("sentido");
+            Log.d("PARAMENTROS", linha + " " + sentido);
+        }
     }
 
     private void inicializaLinhas() {

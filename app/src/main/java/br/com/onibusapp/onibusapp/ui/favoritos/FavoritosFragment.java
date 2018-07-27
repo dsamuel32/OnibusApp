@@ -2,18 +2,17 @@ package br.com.onibusapp.onibusapp.ui.favoritos;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import br.com.onibusapp.onibusapp.ConfirmarDialog;
+import br.com.onibusapp.onibusapp.dialog.ConfirmarDialog;
 import br.com.onibusapp.onibusapp.R;
 import br.com.onibusapp.onibusapp.adapter.FavoritoRecicleViewAdapter;
 import br.com.onibusapp.onibusapp.adapter.RecyclerViewOnClickListener;
@@ -26,6 +25,7 @@ public class FavoritosFragment extends Fragment implements RecyclerViewOnClickLi
     private RecyclerView recyclerView;
     private FavoritoRecicleViewAdapter favoritoRecicleViewAdapter;
     private FavoritosPresenter mFavoritosPresentar;
+    private BottomNavigationView navigation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,13 +33,15 @@ public class FavoritosFragment extends Fragment implements RecyclerViewOnClickLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favoritos, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rcv_favoritos);
-        this.mFavoritosPresentar = new FavoritosPresenter(this, new FavoritoDAO(getActivity()), this);
+        this.mFavoritosPresentar = new FavoritosPresenter(this, new FavoritoDAO(getActivity()), this, getFragmentManager());
+        navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         return view;
     }
 
     @Override
     public void onClickListener(View view, int position) {
-
+        this.mFavoritosPresentar.carregarMapa(position);
+        //navigation.setSelectedItemId(R.id.navigation_home);
     }
 
     @Override

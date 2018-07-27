@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import br.com.onibusapp.onibusapp.R;
+import br.com.onibusapp.onibusapp.data.dominio.DestinoEnum;
 import br.com.onibusapp.onibusapp.data.dominio.Favorito;
 
 /**
@@ -40,7 +41,7 @@ public class FavoritoViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public void setFavorito(Favorito favorito) {
-        txtSentido.setText(favorito.getCodigoSentido().toString());
+        txtSentido.setText(DestinoEnum.getSiglaByCodigo(favorito.getCodigoSentido()));
         txtLinha.setText(favorito.getNomeLinha());
     }
 }

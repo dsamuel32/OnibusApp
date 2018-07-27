@@ -4,9 +4,15 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import br.com.onibusapp.onibusapp.R;
 import br.com.onibusapp.onibusapp.adapter.RecyclerViewOnClickListener;
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO;
 import br.com.onibusapp.onibusapp.data.dominio.Favorito;
+import br.com.onibusapp.onibusapp.ui.MapsFragment;
+import br.com.onibusapp.onibusapp.utils.FragmentUtil;
+
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,14 +25,17 @@ public class FavoritosPresenter implements FavoritosContract.Presenter {
     private final FavoritoDAO favoritoDAO;
     private final FavoritosContract.View mFavoritosView;
     private List<Favorito> favoritos;
-    private RecyclerViewOnClickListener recyclerViewOnClickListener;
+    private final RecyclerViewOnClickListener recyclerViewOnClickListener;
+    private FragmentManager fragmentManager;
 
     public FavoritosPresenter(@NonNull FavoritosContract.View mFavoritosView,
                               @NonNull FavoritoDAO favoritoDAO,
-                              @NonNull RecyclerViewOnClickListener recyclerViewOnClickListener) {
+                              @NonNull RecyclerViewOnClickListener recyclerViewOnClickListener,
+                              @NonNull FragmentManager fragmentManager) {
         this.mFavoritosView = checkNotNull(mFavoritosView, "mFavoritosView cannot be null!");
         this.favoritoDAO = checkNotNull(favoritoDAO);
         this.recyclerViewOnClickListener = checkNotNull(recyclerViewOnClickListener);
+        this.fragmentManager = fragmentManager;
         this.carregar();
     }
 
@@ -41,5 +50,15 @@ public class FavoritosPresenter implements FavoritosContract.Presenter {
         this.favoritos.remove(posicao);
         this.favoritoDAO.apagar(favorito.getId());
         this.mFavoritosView.atualizar(posicao);
+    }
+
+    @Override
+    public void carregarMapa(Integer posicao) {
+        Favorito favorito = this.favoritos.get(posicao);
+        FragmentUtil fragmentUtil = FragmentUtil.getInstance(this.fragmentManager)
+                                                .criarBundle()
+                                                .parametros("linha", favorito.getNomeLinha())
+                                                .parametros("sentido", favorito.getCodigoSentido())
+                                                .mudarTela(new MapsFragment());
     }
 }
