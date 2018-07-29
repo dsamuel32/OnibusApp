@@ -5,10 +5,11 @@
     tools:context="br.com.onibusapp.onibusapp.ui.favoritos.FavoritosFragment">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_favoritos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rcv_favoritos"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:scrollbars="vertical" />
 
 </FrameLayout>

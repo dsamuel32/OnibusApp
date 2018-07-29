@@ -9,17 +9,13 @@
         android:id="@+id/txt_sentido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/vw_divider"
+        android:layout_centerVertical="true"
         android:background="@drawable/circulo_background"
         android:gravity="center"
         android:text="I/V"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="10dp"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/txt_linha"
