@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="456dp"
+        android:layout_height="399dp"
         android:orientation="vertical">
 
         <com.google.android.gms.maps.MapView

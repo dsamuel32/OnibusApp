@@ -104,6 +104,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private void inicializaLinhas() {
         linhas.add("0.006");
         linhas.add("512.1");
+        linhas.add("0.527");
+        linhas.add("0.513");
+        linhas.add("0.512");
+
     }
 
     private void getLocalizacaoOnibus() {
@@ -133,7 +137,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                                 onibus.setLinha(dados.get(5));
                                 onibus.setGtfsLinha(dados.get(6));
                                 onibus.setSentido(dados.get(7));
-
                                 if (linhas.contains(onibus.getLinha())) {
                                     Log.d("MARCANDO", onibus.getLinha());
                                     LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
@@ -142,8 +145,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                             }
 
                         }
-
-
                     }
                 }, new Response.ErrorListener() {
             @Override
