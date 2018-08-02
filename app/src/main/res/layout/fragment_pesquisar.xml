@@ -5,44 +5,73 @@
     tools:context="br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:orientation="vertical"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tw_empresa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/vw_empresa" />
 
         <Spinner
             android:id="@+id/sp_empresa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tw_empresa"
+            android:layout_marginTop="17dp"
             android:entries="@array/empresas"
-            android:prompt="@string/sp_prompt_empresas"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="15dp"/>
+            android:prompt="@string/sp_prompt_empresas" />
+
+        <TextView
+            android:id="@+id/tw_linha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/sp_empresa"
+            android:layout_marginTop="19dp"
+            android:text="@string/vw_linha" />
 
         <Spinner
             android:id="@+id/sp_linha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:prompt="@string/sp_prompt_linha"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tw_linha"
+            android:layout_marginTop="19dp"
+            android:prompt="@string/sp_prompt_linha" />
+
+        <TextView
+            android:id="@+id/tw_percurso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/sp_linha"
+            android:layout_marginTop="21dp"
+            android:text="@string/vw_percurso" />
 
         <Spinner
             android:id="@+id/sp_sentido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:entries="@array/sentido"/>
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tw_percurso"
+            android:layout_marginTop="19dp"
+            android:entries="@array/sentido" />
 
         <CheckBox
             android:id="@+id/cbx_add_favoritos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/sp_sentido"
+            android:layout_marginTop="20dp"
             android:buttonTint="@color/colorPrimary"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
             android:text="@string/cbx_add_favoritos" />
 
         <Button
@@ -50,10 +79,85 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:background="@color/colorPrimary"
             android:text="@string/btn_pesquisar" />
 
-    </LinearLayout>
+    </RelativeLayout>
+    <!-- <LinearLayout
+         android:orientation="vertical"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:padding="20dp">
+
+         <TextView
+             android:id="@+id/tw_empresa"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="@string/vw_empresa"
+             android:layout_marginTop="20dp"/>
+
+         <Spinner
+             android:id="@+id/sp_empresa"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:entries="@array/empresas"
+             android:prompt="@string/sp_prompt_empresas"
+             android:layout_marginTop="20dp"
+             android:layout_marginBottom="15dp"/>
+
+         <TextView
+             android:id="@+id/tw_linha"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:text="@string/vw_linha" />
+
+
+         <Spinner
+             android:id="@+id/sp_linha"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:prompt="@string/sp_prompt_linha"
+             android:layout_marginTop="15dp"
+             android:layout_marginBottom="15dp"/>
+
+         <TextView
+             android:id="@+id/tw_percurso"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+             android:text="@string/vw_percurso" />
+
+         <Spinner
+             android:id="@+id/sp_sentido"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="15dp"
+             android:layout_marginBottom="15dp"
+             android:entries="@array/sentido"/>
+
+         <CheckBox
+             android:id="@+id/cbx_add_favoritos"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:buttonTint="@color/colorPrimary"
+             android:layout_marginTop="15dp"
+             android:layout_marginBottom="15dp"
+             android:text="@string/cbx_add_favoritos" />
+
+         <Button
+             android:id="@+id/btn_pesquisar"
+             style="@style/Widget.AppCompat.Button.Colored"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="45dp"
+             android:background="@color/colorPrimary"
+             android:text="@string/btn_pesquisar" />
+
+
+
+     </LinearLayout>-->
 
 </FrameLayout>

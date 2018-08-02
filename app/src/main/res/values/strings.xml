@@ -16,6 +16,10 @@
     <string name="lb_confirmar">Confirmação</string>
     <string name="msg_deseja_salvar_audio">Deseja excluir o linha dos favoritos?</string>
 
+    <string name="vw_empresa">Empresa</string>
+    <string name="vw_linha">Linha</string>
+    <string name="vw_percurso">Percurso</string>
+
 
     <string-array name="empresas">
         <item>Marechal</item>
