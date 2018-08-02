@@ -45,8 +45,10 @@ import java.util.Set;
 
 import br.com.onibusapp.onibusapp.R;
 import br.com.onibusapp.onibusapp.domain.Onibus;
+import br.com.onibusapp.onibusapp.ui.mapa.MapsContract;
+import br.com.onibusapp.onibusapp.ui.mapa.MapsPresenter;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapsFragment extends Fragment implements MapsContract.View, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
@@ -54,6 +56,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderClient mFusedLocationClient;
     private Button btnAtualizar;
+
+    private MapsContract.Presenter mMapsPresenter;
 
     private Set<String> linhas = new HashSet<>();
 
@@ -81,6 +85,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapView.onResume();
         mapView.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        this.mMapsPresenter = new MapsPresenter(this);
         inicializaLinhas();
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,18 +175,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        if (haveLocationPermission(getActivity())) {
-            try {
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                mMap.getUiSettings().setMapToolbarEnabled(true);
-                mMap.setMyLocationEnabled(true);
-                getMyLocation(true);
-            } catch (SecurityException e) {
-                Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG);
-            }
-        }
-
+        mMapsPresenter.onMapReady();
     }
 
     @Override
@@ -238,6 +232,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    @Override
+    public void onMapReady() {
+        if (haveLocationPermission(getActivity())) {
+            try {
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mMap.getUiSettings().setMapToolbarEnabled(true);
+                mMap.setMyLocationEnabled(true);
+                getMyLocation(true);
+            } catch (SecurityException e) {
+                Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG);
+            }
+        }
+    }
 }
 
 /* EXEMPLO DE PERMISSOES RUNTIME
