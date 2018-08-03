@@ -1,6 +1,7 @@
 package br.com.onibusapp.onibusapp.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -53,8 +54,6 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
     private GoogleMap mMap;
-    private GoogleApiClient googleApiClient;
-    private FusedLocationProviderClient mFusedLocationClient;
     private Button btnAtualizar;
 
     private MapsContract.Presenter mMapsPresenter;
@@ -75,18 +74,15 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        //SupportMapFragment mapFragment = (SupportMapFragment) view.findViewById(R.id.map);
         MapView mapView = (MapView) view.findViewById(R.id.mapaFragment);
         btnAtualizar = (Button) view.findViewById(R.id.btnAtualizar);
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        this.mMapsPresenter = new MapsPresenter(this);
-        inicializaLinhas();
+        this.mMapsPresenter = new MapsPresenter(getActivity(), this);
+
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,14 +102,14 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
         }
     }
 
-    private void inicializaLinhas() {
+    /*private void inicializaLinhas() {
         linhas.add("0.006");
         linhas.add("512.1");
         linhas.add("0.527");
         linhas.add("0.513");
         linhas.add("0.512");
 
-    }
+    }*/
 
     private void getLocalizacaoOnibus() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -129,7 +125,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
                         );
                         List<List<String>> resposta = (List<List<String>>) retMap.get("Dados");
                         mMap.clear();
-                        getMyLocation(false);
+                        mMapsPresenter.getMyLocation(false);
                         for (List<String> dados : resposta) {
 
                             if (dados.get(5) != "") {
@@ -198,40 +194,6 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
                 ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void getMyLocation(Boolean focarMinhaLocalizacao) {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            getLocalizacao(location.getLatitude(), location.getLongitude(), focarMinhaLocalizacao);
-                        }
-                    }
-                });
-    }
-
-    private void getLocalizacao(Double latitude, Double longitude, Boolean focarMinhaLocalizacao) {
-        if (mMap != null) {
-            LatLng minhaLocalizacao = new LatLng(latitude, longitude);
-            if (focarMinhaLocalizacao) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));
-            }
-        }
-    }
-
     @Override
     public void onMapReady() {
         if (haveLocationPermission(getActivity())) {
@@ -239,11 +201,27 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 mMap.getUiSettings().setMapToolbarEnabled(true);
                 mMap.setMyLocationEnabled(true);
-                getMyLocation(true);
+                this.mMapsPresenter.getMyLocation(true);
             } catch (SecurityException e) {
                 Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG);
             }
         }
+    }
+
+    @Override
+    public void setLocalizacao(Double lat, Double lnt, Boolean focarLocalizacao) {
+        if (mMap != null) {
+            LatLng minhaLocalizacao = new LatLng(lat, lnt);
+            if (focarLocalizacao) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 14));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(minhaLocalizacao));
+            }
+        }
+    }
+
+    @Override
+    public Activity getCurrentActivity() {
+        return this.getActivity();
     }
 }
 
