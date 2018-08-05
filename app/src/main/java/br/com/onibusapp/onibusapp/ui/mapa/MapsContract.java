@@ -2,7 +2,7 @@ package br.com.onibusapp.onibusapp.ui.mapa;
 
 import android.app.Activity;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by diego on 02/08/2018.
@@ -18,6 +18,10 @@ public interface MapsContract {
 
         Activity getCurrentActivity();
 
+        void limparMapa();
+
+        void addMarker(LatLng latLng, String linha, String prefixo);
+
     }
 
     interface Presenter {
@@ -27,6 +31,8 @@ public interface MapsContract {
         void setLocalizacao(Double lat, Double lnt, Boolean focarLocalizacao);
 
         void getMyLocation(Boolean focarLocalizacao);
+
+        void getLocalizacaoOnibus();
 
     }
 }

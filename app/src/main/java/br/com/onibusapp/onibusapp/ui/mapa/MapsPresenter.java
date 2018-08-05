@@ -2,16 +2,33 @@ package br.com.onibusapp.onibusapp.ui.mapa;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import br.com.onibusapp.onibusapp.domain.Onibus;
 import br.com.onibusapp.onibusapp.ui.favoritos.FavoritosContract;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
@@ -25,9 +42,21 @@ public class MapsPresenter implements MapsContract.Presenter {
     private final MapsContract.View mMapsView;
     private final FusedLocationProviderClient mFusedLocationClient;
 
+    private Set<String> linhas = new HashSet<>();
+
     public MapsPresenter(@NonNull Activity activity, @NonNull MapsContract.View mMapsView) {
         this.mMapsView = checkNotNull(mMapsView);
         this.mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.mMapsView.getCurrentActivity());
+        inicializaLinhas();
+    }
+
+    private void inicializaLinhas() {
+        linhas.add("0.006");
+        linhas.add("512.1");
+        linhas.add("0.527");
+        linhas.add("0.513");
+        linhas.add("0.512");
+
     }
 
 
@@ -59,9 +88,56 @@ public class MapsPresenter implements MapsContract.Presenter {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            mMapsView.setLocalizacao(location.getLatitude(), location.getLongitude(), false);
+                            mMapsView.setLocalizacao(location.getLatitude(), location.getLongitude(), true);
                         }
                     }
                 });
+    }
+
+    @Override
+    public void getLocalizacaoOnibus() {
+        RequestQueue queue = Volley.newRequestQueue(this.mMapsView.getCurrentActivity());
+        String url = "http://00224.transdatasmart.com.br:22401/ITS-infoexport/api/Data/VeiculosGTFS";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.d("SUCESSO", "OK");
+                        Map<String, Object> retMap = new Gson().fromJson(
+                                response, new TypeToken<HashMap<String, Object>>() {}.getType()
+                        );
+                        List<List<String>> resposta = (List<List<String>>) retMap.get("Dados");
+                        mMapsView.limparMapa();
+                        getMyLocation(false);
+                        for (List<String> dados : resposta) {
+
+                            if (dados.get(5) != "") {
+                                Onibus onibus = new Onibus();
+                                onibus.setPrefixo(dados.get(0));
+                                onibus.setDataHora(dados.get(1));
+                                onibus.setLatitude(dados.get(2));
+                                onibus.setLongitude(dados.get(3));
+                                // onibus.setDirecao(Long.valueOf(dados.get(4)));
+                                onibus.setLinha(dados.get(5));
+                                onibus.setGtfsLinha(dados.get(6));
+                                onibus.setSentido(dados.get(7));
+                                if (linhas.contains(onibus.getLinha())) {
+                                    Log.d("MARCANDO", onibus.getLinha());
+                                    LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
+                                    mMapsView.addMarker(localizacao, onibus.getLinha(), onibus.getPrefixo());
+                                }
+                            }
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("ERRO", error.getMessage());
+            }
+        });
+
+        queue.add(stringRequest);
     }
 }
