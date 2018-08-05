@@ -12,7 +12,7 @@ public interface MapsContract {
 
     interface View {
 
-        void onMapReady();
+        void mapaPronto();
 
         void setLocalizacao(Double lat, Double lnt, Boolean focarLocalizacao);
 
@@ -26,11 +26,11 @@ public interface MapsContract {
 
     interface Presenter {
 
-        void onMapReady();
+        void mapaPronto();
 
         void setLocalizacao(Double lat, Double lnt, Boolean focarLocalizacao);
 
-        void getMyLocation(Boolean focarLocalizacao);
+        void getLocalizacaoUsuario(Boolean focarLocalizacao);
 
         void getLocalizacaoOnibus();
 

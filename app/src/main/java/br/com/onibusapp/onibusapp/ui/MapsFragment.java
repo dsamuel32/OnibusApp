@@ -2,20 +2,17 @@ package br.com.onibusapp.onibusapp.ui;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -90,7 +87,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMapsPresenter.onMapReady();
+        mMapsPresenter.mapaPronto();
     }
 
     @Override
@@ -108,35 +105,29 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
 
     }
 
-    private boolean possuiPermissoes(Context context) {
-        int accessFineLocation = PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
-        int accessCourseLocation = PermissionChecker.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if (accessFineLocation == PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this.getActivity(), new String[]{ android.Manifest.permission.ACCESS_FINE_LOCATION },1);
-            return true;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1001: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mMapsPresenter.mapaPronto();
+                }
+                return;
+            }
         }
-
-        if (accessCourseLocation == PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this.getActivity(), new String[]{ android.Manifest.permission.ACCESS_COARSE_LOCATION },1);
-            return true;
-        }
-
-        return false;
     }
 
     @Override
-    public void onMapReady() {
-        if (possuiPermissoes(getActivity())) {
-            try {
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                mMap.getUiSettings().setMapToolbarEnabled(true);
-                mMap.setMyLocationEnabled(true);
-                this.mMapsPresenter.getMyLocation(true);
-            } catch (SecurityException e) {
-                Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG);
-            }
+    public void mapaPronto() {
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1001);
+            return;
         }
+        mMap.setMyLocationEnabled(true);
+        this.mMapsPresenter.getLocalizacaoUsuario(true);
     }
 
     @Override
@@ -165,18 +156,3 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
         mMap.addMarker(new MarkerOptions().position(latLng).title(linha + " - " + prefixo));
     }
 }
-
-/* EXEMPLO DE PERMISSOES RUNTIME
-final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-
-    private void insertDummyContactWrapper() {
-        int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_CONTACTS);
-        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[] {Manifest.permission.WRITE_CONTACTS},
-                    REQUEST_CODE_ASK_PERMISSIONS);
-            return;
-        }
-        insertDummyContact();
-    }
-
-*/

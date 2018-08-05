@@ -17,7 +17,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import br.com.onibusapp.onibusapp.domain.Onibus;
-import br.com.onibusapp.onibusapp.ui.favoritos.FavoritosContract;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -61,8 +59,8 @@ public class MapsPresenter implements MapsContract.Presenter {
 
 
     @Override
-    public void onMapReady() {
-        this.mMapsView.onMapReady();
+    public void mapaPronto() {
+        this.mMapsView.mapaPronto();
     }
 
     @Override
@@ -71,16 +69,10 @@ public class MapsPresenter implements MapsContract.Presenter {
     }
 
     @Override
-    public void getMyLocation(Boolean focarLocalizacao) {
-        if (ActivityCompat.checkSelfPermission(this.mMapsView.getCurrentActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this.mMapsView.getCurrentActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+    public void getLocalizacaoUsuario(Boolean focarLocalizacao) {
+        if (ActivityCompat.checkSelfPermission(mMapsView.getCurrentActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mMapsView.getCurrentActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            mMapsView.getCurrentActivity().requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1001);
             return;
         }
         this.mFusedLocationClient.getLastLocation()
@@ -88,7 +80,7 @@ public class MapsPresenter implements MapsContract.Presenter {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            mMapsView.setLocalizacao(location.getLatitude(), location.getLongitude(), true);
+                            mMapsView.setLocalizacao(location.getLatitude(), location.getLongitude(), focarLocalizacao);
                         }
                     }
                 });
@@ -109,7 +101,7 @@ public class MapsPresenter implements MapsContract.Presenter {
                         );
                         List<List<String>> resposta = (List<List<String>>) retMap.get("Dados");
                         mMapsView.limparMapa();
-                        getMyLocation(false);
+                        getLocalizacaoUsuario(false);
                         for (List<String> dados : resposta) {
 
                             if (dados.get(5) != "") {
