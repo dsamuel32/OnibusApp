@@ -11,11 +11,13 @@ public class Filtro implements Serializable {
     private String linha;
     private Integer sentido;
     private Boolean adicionarFavoritos;
+    private Integer codigoEmprea;
 
-    public Filtro(String linha, Integer sentido, Boolean adicionarFavoritos) {
+    public Filtro(String linha, Integer sentido, Boolean adicionarFavoritos, Integer codigoEmprea) {
         this.linha = linha;
         this.sentido = sentido;
         this.adicionarFavoritos = adicionarFavoritos;
+        this.codigoEmprea = codigoEmprea;
     }
 
     public String getLinha() {
@@ -42,12 +44,21 @@ public class Filtro implements Serializable {
         this.adicionarFavoritos = adicionarFavoritos;
     }
 
+    public Integer getCodigoEmprea() {
+        return codigoEmprea;
+    }
+
+    public void setCodigoEmprea(Integer codigoEmprea) {
+        this.codigoEmprea = codigoEmprea;
+    }
+
     @Override
     public String toString() {
         return "Filtro{" +
                 "linha='" + linha + '\'' +
                 ", sentido=" + sentido +
                 ", adicionarFavoritos=" + adicionarFavoritos +
+                ", codigoEmpresa=" + codigoEmprea +
                 '}';
     }
 }

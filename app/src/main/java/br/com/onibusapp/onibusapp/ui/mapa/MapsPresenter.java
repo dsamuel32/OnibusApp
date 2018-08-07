@@ -1,7 +1,6 @@
 package br.com.onibusapp.onibusapp.ui.mapa;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -18,18 +17,13 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import br.com.onibusapp.onibusapp.data.dominio.EmpresaEnum;
 import br.com.onibusapp.onibusapp.domain.Onibus;
 import br.com.onibusapp.onibusapp.utils.Constantes;
+import br.com.onibusapp.onibusapp.utils.Conversor;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -85,33 +79,19 @@ public class MapsPresenter implements MapsContract.Presenter {
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         Log.d("SUCESSO", "OK");
-                        Map<String, Object> retMap = new Gson().fromJson(
-                                response, new TypeToken<HashMap<String, Object>>() {}.getType()
-                        );
-                        List<List<String>> resposta = (List<List<String>>) retMap.get("Dados");
                         mMapsView.limparMapa();
                         getLocalizacaoUsuario(false);
-                        for (List<String> dados : resposta) {
+                        new Conversor().from(response)
+                                       .toListOnibus()
+                                       .stream()
+                                       .filter(onibus -> linha.equals(onibus.getLinha()))
+                                       .forEach(onibus -> {
+                                            Log.d("MARCANDO", onibus.getLinha());
+                                            LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
+                                            mMapsView.addMarker(localizacao, onibus.getLinha(), onibus.getPrefixo());
+                                       });
 
-                            if (dados.get(5) != "") {
-                                Onibus onibus = new Onibus();
-                                onibus.setPrefixo(dados.get(0));
-                                onibus.setDataHora(dados.get(1));
-                                onibus.setLatitude(dados.get(2));
-                                onibus.setLongitude(dados.get(3));
-                                // onibus.setDirecao(Long.valueOf(dados.get(4)));
-                                onibus.setLinha(dados.get(5));
-                                onibus.setGtfsLinha(dados.get(6));
-                                onibus.setSentido(dados.get(7));
 
-                                if (linha.equals(onibus.getLinha())) {
-                                    Log.d("MARCANDO", onibus.getLinha());
-                                    LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
-                                    mMapsView.addMarker(localizacao, onibus.getLinha(), onibus.getPrefixo());
-                                }
-                            }
-
-                        }
                     }
                 }, new Response.ErrorListener() {
             @Override

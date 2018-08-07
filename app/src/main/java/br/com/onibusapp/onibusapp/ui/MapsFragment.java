@@ -160,6 +160,8 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
             timer.cancel();
             timer.purge();
         }
+        mMapsPresenter = null;
+
     }
 
     @Override

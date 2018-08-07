@@ -22,6 +22,8 @@ import br.com.onibusapp.onibusapp.data.dominio.Filtro;
 public class PesquisarFragment extends Fragment implements PesquisarContract.View {
 
     private PesquisarContract.Presenter mPresenter;
+    private LinhaDAO linhaDAO;
+    private FavoritoDAO favoritoDAO;
 
     private Spinner spEmpresa;
     private Spinner spLinha;
@@ -30,9 +32,6 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
     private Button btnPesquisar;
 
     private ArrayAdapter<String> linhaDataAdapter;
-
-    private LinhaDAO linhaDAO;
-    private FavoritoDAO favoritoDAO;
 
 
     @Override
@@ -46,7 +45,7 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
         btnPesquisar = (Button) view.findViewById(R.id.btn_pesquisar);
         linhaDAO = new LinhaDAO(getActivity());
         favoritoDAO = new FavoritoDAO(getActivity());
-        mPresenter = new PesquisarPresenter(this, linhaDAO, favoritoDAO);
+        mPresenter = new PesquisarPresenter(this, linhaDAO, favoritoDAO, getFragmentManager());
         mPresenter.createDefaultAdapterLinha();
 
         addEventos();
@@ -106,7 +105,15 @@ public class PesquisarFragment extends Fragment implements PesquisarContract.Vie
 
         Integer sentido = spSentido.getSelectedItemPosition();
         Boolean adicionarFavoritos = cbxAddFavorititos.isChecked();
-        return new Filtro(linha, sentido, adicionarFavoritos);
+        Integer codigoEmpresa = spEmpresa.getSelectedItemPosition() + 1;
+        return new Filtro(linha, sentido, adicionarFavoritos, codigoEmpresa);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter = null;
+        linhaDAO = null;
+        favoritoDAO = null;
+    }
 }

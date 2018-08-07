@@ -56,11 +56,11 @@ public class FavoritosPresenter implements FavoritosContract.Presenter {
     @Override
     public void carregarMapa(Integer posicao) {
         Favorito favorito = this.favoritos.get(posicao);
-        FragmentUtil fragmentUtil = FragmentUtil.getInstance(this.fragmentManager)
-                                                .criarBundle()
-                                                .parametros(Constantes.LINHA, favorito.getNomeLinha())
-                                                .parametros(Constantes.SENTIDO, favorito.getCodigoSentido())
-                                                .parametros(Constantes.CODIGO_EMPRESA, favorito.getCodigoEmpresa())
-                                                .mudarTela(new MapsFragment());
+        FragmentUtil.getInstance(this.fragmentManager)
+                    .criarBundle()
+                    .parametros(Constantes.LINHA, favorito.getNomeLinha())
+                    .parametros(Constantes.SENTIDO, favorito.getCodigoSentido())
+                    .parametros(Constantes.CODIGO_EMPRESA, favorito.getCodigoEmpresa())
+                    .mudarTela(new MapsFragment());
     }
 }
