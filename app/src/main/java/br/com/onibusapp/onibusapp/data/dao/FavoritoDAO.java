@@ -83,7 +83,7 @@ public class FavoritoDAO {
     }
 
     public List<Favorito> findAll() {
-        String query = "SELECT F.ID, F.COD_LINHA, F.COD_SENTIDO, L.NUMERO FROM " + NOME_TABELA + " AS F INNER JOIN TB_LINHA AS L ON L.ID = F.COD_LINHA";
+        String query = "SELECT F.ID, F.COD_LINHA, F.COD_SENTIDO, L.NUMERO, L.COD_EMPRESA FROM " + NOME_TABELA + " AS F INNER JOIN TB_LINHA AS L ON L.ID = F.COD_LINHA";
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
         return montarListaToCursor(cursor);
     }
@@ -97,6 +97,7 @@ public class FavoritoDAO {
                 favorito.setCodigoLinha(cursor.getInt(1));
                 favorito.setCodigoSentido(cursor.getInt(2));
                 favorito.setNomeLinha(cursor.getString(3));
+                favorito.setCodigoEmpresa(cursor.getInt(4));
                 favoritos.add(favorito);
             } while (cursor.moveToNext());
         }

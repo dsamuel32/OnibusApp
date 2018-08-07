@@ -12,18 +12,13 @@ public class Favorito implements Serializable {
     private Integer codigoLinha;
     private Integer codigoSentido;
     private String nomeLinha;
+    private Integer codigoEmpresa;
 
     public Favorito() {}
 
     public Favorito(Integer codigoLinha, Integer codigoSentido) {
         this.codigoLinha = codigoLinha;
         this.codigoSentido = codigoSentido;
-    }
-
-    public Favorito(Integer codigoLinha, Integer codigoSentido, String nomeLinha) {
-        this.codigoLinha = codigoLinha;
-        this.codigoSentido = codigoSentido;
-        this.nomeLinha = nomeLinha;
     }
 
     public Integer getId() {
@@ -58,13 +53,21 @@ public class Favorito implements Serializable {
         this.nomeLinha = nomeLinha;
     }
 
+    public Integer getCodigoEmpresa() {
+        return codigoEmpresa;
+    }
+
+    public void setCodigoEmpresa(Integer codigoEmpresa) {
+        this.codigoEmpresa = codigoEmpresa;
+    }
+
     @Override
     public String toString() {
-        return "Favorito{" +
+        return "Favorito {" +
                 "id=" + id +
                 ", codigoLinha=" + codigoLinha +
                 ", codigoSentido=" + codigoSentido +
-                ", nomeLinha='" + nomeLinha + '\'' +
-                '}';
+                ", nomeLinha=" + nomeLinha +
+                ", codigoEmpresa=" + codigoEmpresa + "}";
     }
 }

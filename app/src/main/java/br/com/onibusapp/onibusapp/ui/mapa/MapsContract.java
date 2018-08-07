@@ -32,7 +32,7 @@ public interface MapsContract {
 
         void getLocalizacaoUsuario(Boolean focarLocalizacao);
 
-        void getLocalizacaoOnibus();
+        void getLocalizacaoOnibus(String linha, Integer sentido, Integer codigoEmpresa);
 
     }
 }

@@ -23,15 +23,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
 import br.com.onibusapp.onibusapp.R;
 import br.com.onibusapp.onibusapp.ui.mapa.MapsContract;
 import br.com.onibusapp.onibusapp.ui.mapa.MapsPresenter;
+import br.com.onibusapp.onibusapp.utils.Constantes;
 
 public class MapsFragment extends Fragment implements MapsContract.View, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
-    private Button btnAtualizar;
     private MapsContract.Presenter mMapsPresenter;
+    private Timer timer;
 
    /* @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +54,11 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         MapView mapView = (MapView) view.findViewById(R.id.mapaFragment);
-        btnAtualizar = (Button) view.findViewById(R.id.btnAtualizar);
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
-        this.mMapsPresenter = new MapsPresenter(getActivity(), this);
-
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMapsPresenter.getLocalizacaoOnibus();
-            }
-        });
+        this.mMapsPresenter = new MapsPresenter(this);
         getParametros();
         return view;
     }
@@ -69,21 +66,21 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     private void getParametros() {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String linha = bundle.getString("linha");
-            Integer sentido = bundle.getInt("sentido");
-            Log.d("PARAMENTROS", linha + " " + sentido);
+            String linha = bundle.getString(Constantes.LINHA);
+            Integer sentido = bundle.getInt(Constantes.SENTIDO);
+            Integer codigoEmpresa = bundle.getInt(Constantes.CODIGO_EMPRESA);
+            Log.d("PARAMENTROS", linha + " " + sentido + " " + codigoEmpresa);
+           timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    Log.d("Timer", "EXECUTOU");
+                    mMapsPresenter.getLocalizacaoOnibus(linha, sentido, codigoEmpresa);
+                }
+            },0, TimeUnit.SECONDS.toMillis(30));
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -108,7 +105,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 1001: {
+            case Constantes.PERMISSAO_LOCALIZACAO: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mMapsPresenter.mapaPronto();
                 }
@@ -123,7 +120,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
         mMap.getUiSettings().setMapToolbarEnabled(true);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1001);
+            requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, Constantes.PERMISSAO_LOCALIZACAO);
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -154,5 +151,24 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     @Override
     public void addMarker(LatLng latLng, String linha, String prefixo) {
         mMap.addMarker(new MarkerOptions().position(latLng).title(linha + " - " + prefixo));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

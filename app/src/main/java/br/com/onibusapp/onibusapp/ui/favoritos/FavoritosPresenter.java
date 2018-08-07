@@ -9,6 +9,7 @@ import br.com.onibusapp.onibusapp.adapter.RecyclerViewOnClickListener;
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO;
 import br.com.onibusapp.onibusapp.data.dominio.Favorito;
 import br.com.onibusapp.onibusapp.ui.MapsFragment;
+import br.com.onibusapp.onibusapp.utils.Constantes;
 import br.com.onibusapp.onibusapp.utils.FragmentUtil;
 
 import android.support.design.widget.BottomNavigationView;
@@ -57,8 +58,9 @@ public class FavoritosPresenter implements FavoritosContract.Presenter {
         Favorito favorito = this.favoritos.get(posicao);
         FragmentUtil fragmentUtil = FragmentUtil.getInstance(this.fragmentManager)
                                                 .criarBundle()
-                                                .parametros("linha", favorito.getNomeLinha())
-                                                .parametros("sentido", favorito.getCodigoSentido())
+                                                .parametros(Constantes.LINHA, favorito.getNomeLinha())
+                                                .parametros(Constantes.SENTIDO, favorito.getCodigoSentido())
+                                                .parametros(Constantes.CODIGO_EMPRESA, favorito.getCodigoEmpresa())
                                                 .mudarTela(new MapsFragment());
     }
 }

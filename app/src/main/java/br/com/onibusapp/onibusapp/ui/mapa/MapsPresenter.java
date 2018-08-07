@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import br.com.onibusapp.onibusapp.data.dominio.EmpresaEnum;
 import br.com.onibusapp.onibusapp.domain.Onibus;
+import br.com.onibusapp.onibusapp.utils.Constantes;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -40,23 +42,10 @@ public class MapsPresenter implements MapsContract.Presenter {
     private final MapsContract.View mMapsView;
     private final FusedLocationProviderClient mFusedLocationClient;
 
-    private Set<String> linhas = new HashSet<>();
-
-    public MapsPresenter(@NonNull Activity activity, @NonNull MapsContract.View mMapsView) {
+    public MapsPresenter(@NonNull MapsContract.View mMapsView) {
         this.mMapsView = checkNotNull(mMapsView);
         this.mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.mMapsView.getCurrentActivity());
-        inicializaLinhas();
     }
-
-    private void inicializaLinhas() {
-        linhas.add("0.006");
-        linhas.add("512.1");
-        linhas.add("0.527");
-        linhas.add("0.513");
-        linhas.add("0.512");
-
-    }
-
 
     @Override
     public void mapaPronto() {
@@ -72,7 +61,7 @@ public class MapsPresenter implements MapsContract.Presenter {
     public void getLocalizacaoUsuario(Boolean focarLocalizacao) {
         if (ActivityCompat.checkSelfPermission(mMapsView.getCurrentActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mMapsView.getCurrentActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            mMapsView.getCurrentActivity().requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, 1001);
+            mMapsView.getCurrentActivity().requestPermissions(new String[]{ Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION }, Constantes.PERMISSAO_LOCALIZACAO);
             return;
         }
         this.mFusedLocationClient.getLastLocation()
@@ -87,9 +76,9 @@ public class MapsPresenter implements MapsContract.Presenter {
     }
 
     @Override
-    public void getLocalizacaoOnibus() {
+    public void getLocalizacaoOnibus(String linha, Integer sentido, Integer codigoEmpresa) {
         RequestQueue queue = Volley.newRequestQueue(this.mMapsView.getCurrentActivity());
-        String url = "http://00224.transdatasmart.com.br:22401/ITS-infoexport/api/Data/VeiculosGTFS";
+        String url = EmpresaEnum.getByCodigo(codigoEmpresa).getUrl();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -114,7 +103,8 @@ public class MapsPresenter implements MapsContract.Presenter {
                                 onibus.setLinha(dados.get(5));
                                 onibus.setGtfsLinha(dados.get(6));
                                 onibus.setSentido(dados.get(7));
-                                if (linhas.contains(onibus.getLinha())) {
+
+                                if (linha.equals(onibus.getLinha())) {
                                     Log.d("MARCANDO", onibus.getLinha());
                                     LatLng localizacao = new LatLng(onibus.getLatitude(), onibus.getLongitude());
                                     mMapsView.addMarker(localizacao, onibus.getLinha(), onibus.getPrefixo());

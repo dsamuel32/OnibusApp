@@ -25,7 +25,6 @@ public class FavoritosFragment extends Fragment implements RecyclerViewOnClickLi
     private RecyclerView recyclerView;
     private FavoritoRecicleViewAdapter favoritoRecicleViewAdapter;
     private FavoritosPresenter mFavoritosPresentar;
-    private BottomNavigationView navigation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,14 +33,12 @@ public class FavoritosFragment extends Fragment implements RecyclerViewOnClickLi
         View view = inflater.inflate(R.layout.fragment_favoritos, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rcv_favoritos);
         this.mFavoritosPresentar = new FavoritosPresenter(this, new FavoritoDAO(getActivity()), this, getFragmentManager());
-        navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         return view;
     }
 
     @Override
     public void onClickListener(View view, int position) {
         this.mFavoritosPresentar.carregarMapa(position);
-        //navigation.setSelectedItemId(R.id.navigation_home);
     }
 
     @Override
