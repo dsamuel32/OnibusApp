@@ -81,7 +81,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
                     Log.d("Timer", "EXECUTOU");
                     mMapsPresenter.getLocalizacaoOnibus(linha, sentido, codigoEmpresa);
                 }
-            },0, TimeUnit.SECONDS.toMillis(30));
+            },0, TimeUnit.SECONDS.toMillis(20));
         }
     }
 
