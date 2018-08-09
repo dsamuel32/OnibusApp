@@ -3,18 +3,18 @@ package br.com.onibusapp.onibusapp.ui;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,6 +39,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     private GoogleMap mMap;
     private MapsContract.Presenter mMapsPresenter;
     private Timer timer;
+    private TextView txtAtualizacao;
 
    /* @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
         getParametros();
         BottomNavigationView navigation = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         navigation.getMenu().getItem(0).setChecked(true);
+        //txtAtualizacao = (TextView) view.findViewById(R.id.txt_tempo_atualizacao);
         return view;
     }
 
@@ -80,6 +82,7 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
                 public void run() {
                     Log.d("Timer", "EXECUTOU");
                     mMapsPresenter.getLocalizacaoOnibus(linha, sentido, codigoEmpresa);
+                    //tempoAtualizacao();
                 }
             },0, TimeUnit.SECONDS.toMillis(20));
         }
@@ -176,5 +179,20 @@ public class MapsFragment extends Fragment implements MapsContract.View, OnMapRe
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    private void tempoAtualizacao() {
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                txtAtualizacao.setText("" + millisUntilFinished / 1000);
+                //here you can have your logic to set text to edittext
+            }
+
+            public void onFinish() {
+                txtAtualizacao.setText("00:00");
+            }
+
+        }.start();
     }
 }
