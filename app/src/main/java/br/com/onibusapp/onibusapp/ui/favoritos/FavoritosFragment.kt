@@ -46,7 +46,7 @@ class FavoritosFragment : Fragment(), RecyclerViewOnClickListener, FavoritosCont
 
     }
 
-    override fun carregar(favoritos: List<Favorito>) {
+    override fun carregar(favoritos: MutableList<Favorito>) {
 
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL

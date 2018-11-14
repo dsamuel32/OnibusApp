@@ -11,7 +11,7 @@ interface FavoritosContract {
 
     interface View {
 
-        fun carregar(favoritos: List<Favorito>)
+        fun carregar(favoritos: MutableList<Favorito>)
 
         fun atualizar(posicao: Int?)
     }

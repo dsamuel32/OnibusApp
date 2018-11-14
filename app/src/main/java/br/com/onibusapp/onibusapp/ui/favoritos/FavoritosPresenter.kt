@@ -35,8 +35,8 @@ class FavoritosPresenter(mFavoritosView: FavoritosContract.View,
     }
 
     override fun apagar(posicao: Int?) {
-        val favorito = this.favoritos!![posicao!!]
-        this.favoritos.removeAt(posicao)
+        val favorito = this.favoritos[posicao!!]
+        //this.favoritos.removeAt(posicao)
         this.favoritoDAO.apagar(favorito.id)
         this.mFavoritosView.atualizar(posicao)
     }
