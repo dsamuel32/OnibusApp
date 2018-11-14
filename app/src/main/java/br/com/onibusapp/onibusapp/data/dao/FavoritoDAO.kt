@@ -87,10 +87,8 @@ class FavoritoDAO(context: Context) {
         val favoritos = ArrayList<Favorito>()
         if (cursor.moveToNext()) {
             do {
-                val favorito = Favorito()
+                val favorito = Favorito(cursor.getInt(1), cursor.getInt(2))
                 favorito.id = cursor.getInt(0)
-                favorito.codigoLinha = cursor.getInt(1)
-                favorito.codigoSentido = cursor.getInt(2)
                 favorito.nomeLinha = cursor.getString(3)
                 favorito.codigoEmpresa = cursor.getInt(4)
                 favoritos.add(favorito)

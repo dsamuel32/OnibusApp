@@ -61,11 +61,10 @@ class MapsPresenter(mMapsView: MapsContract.View) : MapsContract.Presenter {
                     getLocalizacaoUsuario(false)
                     Conversor().from(response)
                             .toListOnibus()
-                            .stream()
                             .filter { onibus -> linha == onibus.linha }
                             .forEach { onibus ->
                                 Log.d("MARCANDO", onibus.linha)
-                                val localizacao = LatLng(onibus.latitude!!, onibus.longitude!!)
+                                val localizacao = LatLng(onibus.latitude, onibus.longitude)
                                 mMapsView.addMarker(localizacao, onibus.linha, onibus.prefixo)
                             }
                 }, Response.ErrorListener { error -> Log.e("ERRO", error.message) })

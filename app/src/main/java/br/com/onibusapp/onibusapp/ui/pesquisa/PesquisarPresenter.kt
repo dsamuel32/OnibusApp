@@ -36,13 +36,15 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
     override fun selecionarEmpresa(position: Int?) {
         val codigoEmpresa = position!! + 1
         linhas = linhaDAO.findByCodigoEmpresa(codigoEmpresa)
-        val nomeLinhas = montarListaNomeLinhas(linhas!!)
+        val nomeLinhas = montarListaNomeLinhas(linhas)
         mPesquisarView.atualizarSpinnerLinha(nomeLinhas)
     }
 
-    private fun montarListaNomeLinhas(linhas: List<Linha>): List<String> {
+    private fun montarListaNomeLinhas(linhas: List<Linha>): MutableList<String> {
 
-        val nomes: MutableList<String> = linhas.map { linha -> linha.numero }.toMutableList()
+        var nomes: MutableList<String> = linhas.map { linha -> linha.numero }.toMutableList()
+
+        if (nomes == null) nomes = arrayListOf()
 
         if (nomes.isEmpty()) {
             nomes.add(NENHUMA_LINHA_ENCONTRADA)
@@ -52,7 +54,7 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
 
     override fun createDefaultAdapterLinha() {
         linhas = linhaDAO.findByCodigoEmpresa(1)
-        val numeroLinhas = montarListaNomeLinhas(linhas!!)
+        val numeroLinhas = montarListaNomeLinhas(linhas)
         this.mPesquisarView.createDefaultAdapterLinha(numeroLinhas)
     }
 

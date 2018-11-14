@@ -71,7 +71,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
     }
 
 
-    override fun atualizarSpinnerLinha(nomes: List<String>) {
+    override fun atualizarSpinnerLinha(nomes: MutableList<String>) {
         linhaDataAdapter!!.clear()
         linhaDataAdapter!!.addAll(nomes)
         linhaDataAdapter!!.notifyDataSetChanged()

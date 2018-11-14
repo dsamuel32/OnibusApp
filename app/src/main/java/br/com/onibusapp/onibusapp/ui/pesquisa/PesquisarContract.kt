@@ -10,7 +10,7 @@ interface PesquisarContract {
 
     interface View {
 
-        fun atualizarSpinnerLinha(nomes: List<String>)
+        fun atualizarSpinnerLinha(nomes: MutableList<String>)
         fun createDefaultAdapterLinha(linhas: List<String>)
         fun selecionarFiltros(): Filtro
 

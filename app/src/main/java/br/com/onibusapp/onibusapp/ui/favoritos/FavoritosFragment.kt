@@ -36,9 +36,9 @@ class FavoritosFragment : Fragment(), RecyclerViewOnClickListener, FavoritosCont
     }
 
     override fun onLongPressClickListener(view: View, position: Int) {
-        val stringUtils = StringUtils.getInstance(activity)
+        val stringUtils = StringUtils()
         val confirmarDialog = ConfirmarDialog(
-                stringUtils.getString(R.string.msg_deseja_salvar_audio),
+                stringUtils.getStringValues(R.string.msg_deseja_excluir_favoritos, activity),
                 DialogInterface.OnClickListener { dialog, which -> mFavoritosPresentar!!.apagar(position) },
                 DialogInterface.OnClickListener { dialog, which -> })
         confirmarDialog.isCancelable = false
