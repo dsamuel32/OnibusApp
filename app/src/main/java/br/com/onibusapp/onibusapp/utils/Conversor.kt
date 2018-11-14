@@ -27,7 +27,6 @@ class Conversor {
         val listaOnibus: MutableList<Onibus> = arrayListOf()
         val stringUtils: StringUtils = StringUtils()
         for (dados in dfTransResposta.dados) {
-            "1.0".toDouble();
             if (dados[5] != null) {
                 val onibus = Onibus(dados[0],
                                     dados[1],

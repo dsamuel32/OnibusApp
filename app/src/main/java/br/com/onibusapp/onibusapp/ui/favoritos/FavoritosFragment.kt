@@ -18,9 +18,9 @@ import br.com.onibusapp.onibusapp.utils.StringUtils
 
 class FavoritosFragment : Fragment(), RecyclerViewOnClickListener, FavoritosContract.View {
 
-    private var recyclerView: RecyclerView? = null
-    private var favoritoRecicleViewAdapter: FavoritoRecicleViewAdapter? = null
-    private var mFavoritosPresentar: FavoritosPresenter? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var favoritoRecicleViewAdapter: FavoritoRecicleViewAdapter
+    private lateinit var mFavoritosPresentar: FavoritosPresenter
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -63,7 +63,6 @@ class FavoritosFragment : Fragment(), RecyclerViewOnClickListener, FavoritosCont
     }
 
     override fun onDestroy() {
-        this.mFavoritosPresentar = null
         super.onDestroy()
     }
 }
