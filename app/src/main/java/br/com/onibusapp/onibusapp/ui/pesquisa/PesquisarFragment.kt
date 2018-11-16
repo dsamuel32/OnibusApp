@@ -15,6 +15,7 @@ import br.com.onibusapp.onibusapp.R
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO
 import br.com.onibusapp.onibusapp.data.dao.LinhaDAO
 import br.com.onibusapp.onibusapp.data.dominio.Filtro
+import com.google.firebase.database.FirebaseDatabase
 
 
 class PesquisarFragment : Fragment(), PesquisarContract.View {
@@ -44,6 +45,10 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         favoritoDAO = FavoritoDAO(activity)
         mPresenter = PesquisarPresenter(this, linhaDAO!!, favoritoDAO!!, fragmentManager)
         mPresenter!!.createDefaultAdapterLinha()
+
+        var firebase: FirebaseDatabase = FirebaseDatabase.getInstance()
+
+        firebase.
 
         addEventos()
         return view
