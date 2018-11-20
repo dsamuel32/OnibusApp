@@ -2,20 +2,17 @@ package br.com.onibusapp.onibusapp.ui.pesquisa
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.Spinner
-
+import android.widget.*
 import br.com.onibusapp.onibusapp.R
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO
 import br.com.onibusapp.onibusapp.data.dao.LinhaDAO
+import br.com.onibusapp.onibusapp.data.dominio.Empresas
 import br.com.onibusapp.onibusapp.data.dominio.Filtro
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 
 class PesquisarFragment : Fragment(), PesquisarContract.View {
@@ -31,6 +28,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
     private var btnPesquisar: Button? = null
 
     private var linhaDataAdapter: ArrayAdapter<String>? = null
+    private var dataBaseReference: DatabaseReference? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -45,10 +43,8 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         favoritoDAO = FavoritoDAO(activity)
         mPresenter = PesquisarPresenter(this, linhaDAO!!, favoritoDAO!!, fragmentManager)
         mPresenter!!.createDefaultAdapterLinha()
+        this.dataBaseReference = FirebaseDatabase.getInstance().reference
 
-        var firebase: FirebaseDatabase = FirebaseDatabase.getInstance()
-
-        firebase.
 
         addEventos()
         return view
@@ -107,4 +103,25 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         linhaDAO = null
         favoritoDAO = null
     }
+
+    override fun onStart() {
+        super.onStart()
+
+        val onibusListener = object : ValueEventListener {
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val empresas = dataSnapshot.getValue(Empresas::class.java)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d("erro", "erro recuperar dados firebase")
+                // Failed to read value
+            }
+        }
+
+        dataBaseReference!!.addValueEventListener(onibusListener)
+    }
+
 }
