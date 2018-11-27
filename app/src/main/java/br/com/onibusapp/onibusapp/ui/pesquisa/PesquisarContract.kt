@@ -24,7 +24,7 @@ interface PesquisarContract {
         fun pesquisar()
         fun recuperarDadosFireBase()
         fun criarFiltrosAdapter()
-        fun recuperarUrlEmpresa()
+        fun recuperarUrlEmpresa(): String
 
         companion object {
 

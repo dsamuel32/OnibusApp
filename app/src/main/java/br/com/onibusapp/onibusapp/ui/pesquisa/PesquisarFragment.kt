@@ -18,7 +18,7 @@ import com.google.firebase.database.*
 
 class PesquisarFragment : Fragment(), PesquisarContract.View {
 
-    private var mPresenter: PesquisarContract.Presenter? = null
+    private lateinit var mPresenter: PesquisarContract.Presenter
     private var linhaDAO: LinhaDAO? = null
     private var favoritoDAO: FavoritoDAO? = null
 
@@ -60,7 +60,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
     private fun addEventoSelecionarEmpresa() {
         spEmpresa!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                mPresenter!!.selecionarEmpresa(position)
+                mPresenter.selecionarEmpresa(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -94,42 +94,25 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
 
     override fun selecionarFiltros(): Filtro {
         val linha = spLinha!!.selectedItem.toString()
-
+        val empresa = spEmpresa!!.selectedItem.toString()
         if (linha == PesquisarContract.Presenter.NENHUMA_LINHA_ENCONTRADA) {
 
         }
 
         val sentido = spSentido!!.selectedItemPosition
         val adicionarFavoritos = cbxAddFavorititos!!.isChecked
-        val codigoEmpresa = spEmpresa!!.selectedItemPosition + 1
-        return Filtro(linha, sentido, adicionarFavoritos, codigoEmpresa)
+        var url = this.mPresenter!!.recuperarUrlEmpresa()
+        return Filtro(linha, sentido, adicionarFavoritos, url)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mPresenter = null
         linhaDAO = null
         favoritoDAO = null
     }
 
     override fun onStart() {
         super.onStart()
-
-        /*val onibusListener = object : ValueEventListener {
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    val empresas = dataSnapshot.getValue(Empresas::class.java)
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.d("erro", "erro recuperar dados firebase")
-                // Failed to read value
-            }
-        }
-
-        dataBaseReference!!.addValueEventListener(onibusListener)*/
     }
 
 }

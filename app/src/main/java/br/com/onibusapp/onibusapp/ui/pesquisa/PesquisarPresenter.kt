@@ -162,4 +162,8 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
                 .parametros(Constantes.URL, url)
                 .mudarTela(MapsFragment())
     }
+
+    override fun recuperarUrlEmpresa(): String {
+        return ""
+    }
 }
