@@ -32,7 +32,7 @@ interface MapsContract {
 
         fun getLocalizacaoUsuario(focarLocalizacao: Boolean?)
 
-        fun getLocalizacaoOnibus(linha: String, sentido: Int?, codigoEmpresa: Int?)
+        fun getLocalizacaoOnibus(linha: String, sentido: Int, url: String)
 
     }
 }

@@ -1,3 +1,3 @@
 package br.com.onibusapp.onibusapp.data.dominio
 
-data class Empresa (var nome: String = "", var url: String = "")
+data class Empresa (var nome: String = "", var url: String = "", var linhas: MutableList<Linha> = arrayListOf())

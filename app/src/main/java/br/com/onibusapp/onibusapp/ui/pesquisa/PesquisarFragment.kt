@@ -10,6 +10,7 @@ import android.widget.*
 import br.com.onibusapp.onibusapp.R
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO
 import br.com.onibusapp.onibusapp.data.dao.LinhaDAO
+import br.com.onibusapp.onibusapp.data.dominio.Empresa
 import br.com.onibusapp.onibusapp.data.dominio.Empresas
 import br.com.onibusapp.onibusapp.data.dominio.Filtro
 import com.google.firebase.database.*
@@ -28,7 +29,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
     private var btnPesquisar: Button? = null
 
     private var linhaDataAdapter: ArrayAdapter<String>? = null
-    private var dataBaseReference: DatabaseReference? = null
+    private var empresaDataAdapter: ArrayAdapter<String>? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -41,10 +42,11 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         btnPesquisar = view.findViewById<View>(R.id.btn_pesquisar) as Button
         linhaDAO = LinhaDAO(activity)
         favoritoDAO = FavoritoDAO(activity)
-        mPresenter = PesquisarPresenter(this, linhaDAO!!, favoritoDAO!!, fragmentManager)
-        mPresenter!!.createDefaultAdapterLinha()
-        this.dataBaseReference = FirebaseDatabase.getInstance().reference
 
+        var fireBase = FirebaseDatabase.getInstance()
+        fireBase.setPersistenceEnabled(true)
+
+        mPresenter = PesquisarPresenter(this, linhaDAO!!, favoritoDAO!!, fragmentManager, fireBase.reference)
 
         addEventos()
         return view
@@ -78,10 +80,16 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         linhaDataAdapter!!.notifyDataSetChanged()
     }
 
-    override fun createDefaultAdapterLinha(linhas: List<String>) {
+    override fun criarDefaultAdapterLinha(linhas: List<String>) {
         linhaDataAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, linhas)
         linhaDataAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spLinha!!.adapter = linhaDataAdapter
+    }
+
+    override fun criarDefaultAdapterEmpresa(empresas: List<String>) {
+        empresaDataAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, empresas)
+        empresaDataAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spEmpresa!!.adapter = empresaDataAdapter
     }
 
     override fun selecionarFiltros(): Filtro {
@@ -107,7 +115,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
     override fun onStart() {
         super.onStart()
 
-        val onibusListener = object : ValueEventListener {
+        /*val onibusListener = object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -121,7 +129,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
             }
         }
 
-        dataBaseReference!!.addValueEventListener(onibusListener)
+        dataBaseReference!!.addValueEventListener(onibusListener)*/
     }
 
 }

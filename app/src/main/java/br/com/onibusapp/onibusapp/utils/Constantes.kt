@@ -9,7 +9,7 @@ class Constantes {
     companion object {
         val LINHA = "LINHA"
         val SENTIDO = "SENTIDO"
-        val CODIGO_EMPRESA = "CODIGO_EMPRESA"
+        val URL = "URL"
         val PERMISSAO_LOCALIZACAO = 1001
     }
 

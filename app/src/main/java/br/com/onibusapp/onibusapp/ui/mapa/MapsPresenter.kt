@@ -50,9 +50,8 @@ class MapsPresenter(mMapsView: MapsContract.View) : MapsContract.Presenter {
                 }
     }
 
-    override fun getLocalizacaoOnibus(linha: String, sentido: Int?, codigoEmpresa: Int?) {
+    override fun getLocalizacaoOnibus(linha: String, sentido: Int, url: String) {
         val queue = Volley.newRequestQueue(this.mMapsView.getCurrentActivity())
-        val url = EmpresaEnum.getByCodigo(codigoEmpresa)!!.url
         val stringRequest = StringRequest(Request.Method.GET, url,
                 Response.Listener { response ->
                     // Display the first 500 characters of the response string.

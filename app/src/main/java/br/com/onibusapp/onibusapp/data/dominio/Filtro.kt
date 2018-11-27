@@ -9,14 +9,14 @@ import java.io.Serializable
 data class Filtro(var linha: String,
                   var sentido: Int,
                   var adicionarFavoritos: Boolean,
-                  var codigoEmprea: Int) : Serializable {
+                  var url: String) : Serializable {
 
     override fun toString(): String {
         return "Filtro{" +
                 "linha='" + linha + '\''.toString() +
                 ", sentido=" + sentido +
                 ", adicionarFavoritos=" + adicionarFavoritos +
-                ", codigoEmpresa=" + codigoEmprea +
+                ", url=" + url +
                 '}'.toString()
     }
 }
