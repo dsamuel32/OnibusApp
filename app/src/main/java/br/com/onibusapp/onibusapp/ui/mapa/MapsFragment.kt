@@ -52,13 +52,13 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
         if (bundle != null) {
             val linha = bundle.getString(Constantes.LINHA)
             val sentido = bundle.getInt(Constantes.SENTIDO)
-            val codigoEmpresa = bundle.getInt(Constantes.CODIGO_EMPRESA)
-            Log.d("PARAMENTROS", "$linha $sentido $codigoEmpresa")
+            val url = bundle.getString(Constantes.URL)
+            Log.d("PARAMENTROS", "$linha $sentido $url")
             timer = Timer()
             timer!!.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     Log.d("Timer", "EXECUTOU")
-                    mMapsPresenter!!.getLocalizacaoOnibus(linha, sentido, codigoEmpresa)
+                    mMapsPresenter!!.getLocalizacaoOnibus(linha, sentido, url)
                     //tempoAtualizacao();
                 }
             }, 0, TimeUnit.SECONDS.toMillis(20))

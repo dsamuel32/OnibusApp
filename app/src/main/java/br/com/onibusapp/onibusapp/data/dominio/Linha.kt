@@ -7,5 +7,7 @@ import java.io.Serializable
  */
 
 data class Linha (var id: Int = 0,
-             var numero: String = "",
-             var codigoEmpresa: Int = 0) : Serializable
+                  var linha: String = "",
+                  var nome: String = "",
+                  var codigoEmpresa: Int = 0,
+                  var dias: String = "") : Serializable

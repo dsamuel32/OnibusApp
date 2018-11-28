@@ -47,7 +47,7 @@ class FavoritosPresenter(mFavoritosView: FavoritosContract.View,
                 .criarBundle()
                 .parametros(Constantes.LINHA, favorito.nomeLinha)
                 .parametros(Constantes.SENTIDO, favorito.codigoSentido)
-                .parametros(Constantes.CODIGO_EMPRESA, favorito.codigoEmpresa)
+                .parametros(Constantes.URL, favorito.codigoEmpresa)
                 .mudarTela(MapsFragment())
     }
 }

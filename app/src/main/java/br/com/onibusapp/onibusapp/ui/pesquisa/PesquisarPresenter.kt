@@ -12,6 +12,7 @@ import br.com.onibusapp.onibusapp.ui.MapsFragment
 import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarContract.Presenter.Companion.NENHUMA_EMPRESA_ENCONTRADA
 import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarContract.Presenter.Companion.NENHUMA_LINHA_ENCONTRADA
 import br.com.onibusapp.onibusapp.utils.Constantes
+import br.com.onibusapp.onibusapp.utils.DataUtil
 import br.com.onibusapp.onibusapp.utils.FragmentUtil
 import com.google.firebase.database.*
 
@@ -40,7 +41,7 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
         this.favoritoDAO = kotlin.checkNotNull(favoritoDAO)
         this.fragmentManager = kotlin.checkNotNull(fragmentManager)
         this.dataBaseReference = kotlin.checkNotNull(dataBaseReference)
-        this.fireBaseListener()
+        this.dataBaseReference.addValueEventListener(this.fireBaseListener())
     }
 
     override fun recuperarDadosFireBase() {
@@ -56,6 +57,9 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     montarDadosFiltros(dataSnapshot)
+                    var nomesEmpresas = montarListaNomeEmprasas(empresas)
+                    mPesquisarView.atualizarSpinnerEmpresa(nomesEmpresas)
+                    selecionarEmpresa(0)
 
                 }
             }
@@ -87,15 +91,16 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
     }
 
     override fun selecionarEmpresa(position: Int) {
-        this.linhas = mapaEmpresas.get(position)!!
-        val nomeLinhas = montarListaNomeLinhas(this.linhas)
-        this.mPesquisarView.atualizarSpinnerLinha(nomeLinhas)
+        if (this.mapaEmpresas.isNotEmpty()) {
+            this.linhas = this.mapaEmpresas.get(position)!!
+            val nomeLinhas = this.montarListaNomeLinhas(this.linhas)
+            this.mPesquisarView.atualizarSpinnerLinha(nomeLinhas)
+        }
     }
 
     override fun criarFiltrosAdapter() {
         this.criarDefaultLinhaEmpresa()
         this.criarDefaultAdapterLinha()
-
     }
 
     fun criarDefaultLinhaEmpresa() {
@@ -116,14 +121,16 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
     }
 
     fun criarDefaultAdapterLinha() {
-        this.linhas = this.mapaEmpresas.get(0)!!
+        //this.linhas = this.mapaEmpresas.get(0)!!
         val numeroLinhas = montarListaNomeLinhas(linhas)
         this.mPesquisarView.criarDefaultAdapterLinha(numeroLinhas)
     }
 
     private fun montarListaNomeLinhas(linhas: List<Linha>): MutableList<String> {
-
-        var nomes: MutableList<String> = linhas.map { linha -> linha.numero }.toMutableList()
+        val dataUtil = DataUtil()
+        val diaSemana = dataUtil.recuperarDiaSemana()
+        var linhasDiaSemana: MutableList<Linha> = linhas.filter { linha -> linha.dias.equals(diaSemana) }.toMutableList()
+        var nomes: MutableList<String> = linhasDiaSemana.map { linha -> "${linha.linha} - ${linha.nome}" }.toMutableList()
 
         if (nomes == null) nomes = arrayListOf()
 
@@ -148,7 +155,7 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
     }
 
     private fun recuperarNumeroLinha(numero: String): Int? {
-        val ids = linhas.filter { linha -> linha.numero == numero }.toList()
+        val ids = linhas.filter { linha -> linha.linha == numero }.toList()
 
         return if (!ids.isEmpty()) ids[0].id
         else return null
@@ -163,7 +170,13 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
                 .mudarTela(MapsFragment())
     }
 
-    override fun recuperarUrlEmpresa(): String {
-        return ""
+    override fun recuperarUrlEmpresa(nomeEmpresa: String): String {
+        val empresa = this.empresas.filter { it -> it.nome.equals(nomeEmpresa) }[0]
+        return empresa.url
+    }
+
+    override fun extrairNumeroLinha(linha: String): String {
+        val dados = linha.split("-")
+        return dados[0].trim()
     }
 }

@@ -44,7 +44,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         favoritoDAO = FavoritoDAO(activity)
 
         var fireBase = FirebaseDatabase.getInstance()
-        fireBase.setPersistenceEnabled(true)
+        if (fireBase.reference == null) fireBase.setPersistenceEnabled(true)
 
         mPresenter = PesquisarPresenter(this, linhaDAO!!, favoritoDAO!!, fragmentManager, fireBase.reference)
 
@@ -80,6 +80,12 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         linhaDataAdapter!!.notifyDataSetChanged()
     }
 
+    override fun atualizarSpinnerEmpresa(nomes: MutableList<String>) {
+        empresaDataAdapter!!.clear()
+        empresaDataAdapter!!.addAll(nomes)
+        empresaDataAdapter!!.notifyDataSetChanged()
+    }
+
     override fun criarDefaultAdapterLinha(linhas: List<String>) {
         linhaDataAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, linhas)
         linhaDataAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -101,8 +107,8 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
 
         val sentido = spSentido!!.selectedItemPosition
         val adicionarFavoritos = cbxAddFavorititos!!.isChecked
-        var url = this.mPresenter!!.recuperarUrlEmpresa()
-        return Filtro(linha, sentido, adicionarFavoritos, url)
+        var url = this.mPresenter!!.recuperarUrlEmpresa(empresa)
+        return Filtro(this.mPresenter.extrairNumeroLinha(linha), sentido, adicionarFavoritos, url)
     }
 
     override fun onDestroy() {
@@ -113,6 +119,7 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
 
     override fun onStart() {
         super.onStart()
+        this.mPresenter.criarFiltrosAdapter()
     }
 
 }

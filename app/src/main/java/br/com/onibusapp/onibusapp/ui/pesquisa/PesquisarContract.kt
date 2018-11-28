@@ -12,6 +12,7 @@ interface PesquisarContract {
     interface View {
 
         fun atualizarSpinnerLinha(nomes: MutableList<String>)
+        fun atualizarSpinnerEmpresa(nomes: MutableList<String>)
         fun criarDefaultAdapterLinha(linhas: List<String>)
         fun selecionarFiltros(): Filtro
         fun criarDefaultAdapterEmpresa(empresas: List<String>)
@@ -24,7 +25,8 @@ interface PesquisarContract {
         fun pesquisar()
         fun recuperarDadosFireBase()
         fun criarFiltrosAdapter()
-        fun recuperarUrlEmpresa(): String
+        fun recuperarUrlEmpresa(empresa: String): String
+        fun extrairNumeroLinha(linha: String): String
 
         companion object {
 

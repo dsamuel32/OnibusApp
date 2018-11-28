@@ -43,7 +43,7 @@ class LinhaDAO(context: Context) {
         val linhas = ArrayList<Linha>()
         if (cursor.moveToNext()) {
             do {
-                val linha = Linha(cursor.getInt(0), cursor.getString(1), cursor.getInt(2))
+                val linha = Linha(cursor.getInt(0), cursor.getString(1), "", cursor.getInt(2))
                 linhas.add(linha)
             } while (cursor.moveToNext())
         }
