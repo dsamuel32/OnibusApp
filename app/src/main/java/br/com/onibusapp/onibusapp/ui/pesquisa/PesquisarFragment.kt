@@ -2,24 +2,19 @@ package br.com.onibusapp.onibusapp.ui.pesquisa
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import br.com.onibusapp.onibusapp.R
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO
-import br.com.onibusapp.onibusapp.data.dao.LinhaDAO
-import br.com.onibusapp.onibusapp.data.dominio.Empresa
-import br.com.onibusapp.onibusapp.data.dominio.Empresas
 import br.com.onibusapp.onibusapp.data.dominio.Filtro
-import com.google.firebase.database.*
+import com.google.firebase.database.FirebaseDatabase
 
 
 class PesquisarFragment : Fragment(), PesquisarContract.View {
 
     private lateinit var mPresenter: PesquisarContract.Presenter
-    private var linhaDAO: LinhaDAO? = null
     private var favoritoDAO: FavoritoDAO? = null
 
     private var spEmpresa: Spinner? = null
@@ -40,13 +35,12 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
         spSentido = view.findViewById<View>(R.id.sp_sentido) as Spinner
         cbxAddFavorititos = view.findViewById<View>(R.id.cbx_add_favoritos) as CheckBox
         btnPesquisar = view.findViewById<View>(R.id.btn_pesquisar) as Button
-        linhaDAO = LinhaDAO(activity)
         favoritoDAO = FavoritoDAO(activity)
 
         var fireBase = FirebaseDatabase.getInstance()
         if (fireBase.reference == null) fireBase.setPersistenceEnabled(true)
 
-        mPresenter = PesquisarPresenter(this, linhaDAO!!, favoritoDAO!!, fragmentManager, fireBase.reference)
+        mPresenter = PesquisarPresenter(this, favoritoDAO!!, fragmentManager, fireBase.reference)
 
         addEventos()
         return view
@@ -113,7 +107,6 @@ class PesquisarFragment : Fragment(), PesquisarContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        linhaDAO = null
         favoritoDAO = null
     }
 

@@ -45,9 +45,9 @@ class FavoritosPresenter(mFavoritosView: FavoritosContract.View,
         val favorito = this.favoritos[posicao!!]
         FragmentUtil.getInstance(this.fragmentManager)
                 .criarBundle()
-                .parametros(Constantes.LINHA, favorito.nomeLinha)
+                .parametros(Constantes.LINHA, favorito.linha)
                 .parametros(Constantes.SENTIDO, favorito.codigoSentido)
-                .parametros(Constantes.URL, favorito.codigoEmpresa)
+                .parametros(Constantes.URL, favorito.url)
                 .mudarTela(MapsFragment())
     }
 }

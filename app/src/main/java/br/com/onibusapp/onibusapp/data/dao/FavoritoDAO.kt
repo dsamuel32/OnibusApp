@@ -45,9 +45,9 @@ class FavoritoDAO(context: Context) {
     }
 
     private fun isExiste(favorito: Favorito): Boolean {
-        val query = "SELECT * FROM $NOME_TABELA WHERE $COD_LINHA = ? AND $COD_SENTIDO = ? "
+        val query = "SELECT * FROM $NOME_TABELA WHERE $LINHA = ? AND $COD_SENTIDO = ? "
         val cursor = sqLiteDatabase.rawQuery(query,
-                arrayOf(favorito.codigoLinha!!.toString(), favorito.codigoSentido!!.toString()))
+                arrayOf(favorito.linha, favorito.codigoSentido!!.toString()))
 
         return cursor.count > 0
 
@@ -59,8 +59,8 @@ class FavoritoDAO(context: Context) {
 
     private fun atualizar(favorito: Favorito): Favorito {
         val values = criarInsertValues(favorito)
-        val where = "$COD_SENTIDO = ? AND $COD_LINHA = ? "
-        val whereArgs = arrayOf(favorito.codigoSentido!!.toString(), favorito.codigoLinha!!.toString())
+        val where = "$COD_SENTIDO = ? AND $LINHA = ? "
+        val whereArgs = arrayOf(favorito.codigoSentido!!.toString(), favorito.linha)
         atualizar(values, where, whereArgs)
         return favorito
     }
@@ -72,13 +72,15 @@ class FavoritoDAO(context: Context) {
     private fun criarInsertValues(favorito: Favorito): ContentValues {
         val values = ContentValues()
         values.put(ID, favorito.id)
-        values.put(COD_LINHA, favorito.codigoLinha)
+        values.put(LINHA, favorito.linha)
         values.put(COD_SENTIDO, favorito.codigoSentido)
+        values.put(URL, favorito.url)
         return values
     }
 
     fun findAll(): MutableList<Favorito> {
-        val query = "SELECT F.ID, F.COD_LINHA, F.COD_SENTIDO, L.NUMERO, L.COD_EMPRESA FROM $NOME_TABELA AS F INNER JOIN TB_LINHA AS L ON L.ID = F.COD_LINHA"
+
+        val query = "SELECT F.ID, F.LINHA, F.COD_SENTIDO, F.URL FROM $NOME_TABELA AS F"
         val cursor = sqLiteDatabase.rawQuery(query, null)
         return montarListaToCursor(cursor)
     }
@@ -87,10 +89,10 @@ class FavoritoDAO(context: Context) {
         val favoritos = ArrayList<Favorito>()
         if (cursor.moveToNext()) {
             do {
-                val favorito = Favorito(cursor.getInt(1), cursor.getInt(2))
-                favorito.id = cursor.getInt(0)
-                favorito.nomeLinha = cursor.getString(3)
-                favorito.codigoEmpresa = cursor.getInt(4)
+                val favorito = Favorito(cursor.getInt(0),
+                                        cursor.getInt(2),
+                                        cursor.getString(1),
+                                        cursor.getString(3))
                 favoritos.add(favorito)
             } while (cursor.moveToNext())
         }
@@ -103,11 +105,11 @@ class FavoritoDAO(context: Context) {
     }
 
     companion object {
-
         val NOME_TABELA = "TB_FAVORITOS"
         val ID = "ID"
-        val COD_LINHA = "COD_LINHA"
+        val LINHA = "LINHA"
         val COD_SENTIDO = "COD_SENTIDO"
         val ERRO_DAO_TB_FAVORITOS = "[ERRO CRIAR DAO TB_FAVORITOS]"
+        val URL = "URL"
     }
 }

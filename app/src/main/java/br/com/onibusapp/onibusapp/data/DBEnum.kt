@@ -6,8 +6,8 @@ package br.com.onibusapp.onibusapp.data
 
 enum class DBEnum private constructor(val descricao: String) {
 
-    SCRIPT_DATABASE_DELETE("DROP TABLE IF EXISTS TB_EMPRESA; DROP TABLE IF EXISTS TB_LINHA;"),
+    SCRIPT_DATABASE_DELETE("DROP TABLE IF EXISTS TB_FAVORITOS;"),
     NOME("ONIBUS_APP"),
-    VERSAO("1")
+    VERSAO("2")
 
 }

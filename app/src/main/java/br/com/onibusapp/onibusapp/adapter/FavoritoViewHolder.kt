@@ -37,6 +37,6 @@ class FavoritoViewHolder(itemView: View, private val recyclerViewOnClickListener
 
     fun setFavorito(favorito: Favorito) {
         txtSentido.text = DestinoEnum.getSiglaByCodigo(favorito.codigoSentido)
-        txtLinha.text = favorito.nomeLinha
+        txtLinha.text = favorito.linha
     }
 }

@@ -3,7 +3,6 @@ package br.com.onibusapp.onibusapp.ui.pesquisa
 import android.support.v4.app.FragmentManager
 import android.util.Log
 import br.com.onibusapp.onibusapp.data.dao.FavoritoDAO
-import br.com.onibusapp.onibusapp.data.dao.LinhaDAO
 import br.com.onibusapp.onibusapp.data.dominio.Empresa
 import br.com.onibusapp.onibusapp.data.dominio.Empresas
 import br.com.onibusapp.onibusapp.data.dominio.Favorito
@@ -21,13 +20,11 @@ import com.google.firebase.database.*
  */
 
 class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
-                         linhaDAO: LinhaDAO,
                          favoritoDAO: FavoritoDAO,
                          fragmentManager: FragmentManager,
                          dataBaseReference: DatabaseReference) : PesquisarContract.Presenter {
 
     private val mPesquisarView: PesquisarContract.View
-    private val linhaDAO: LinhaDAO
     private val favoritoDAO: FavoritoDAO
     private val fragmentManager: FragmentManager
     private var linhas: MutableList<Linha> = arrayListOf()
@@ -37,7 +34,6 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
 
     init {
         this.mPesquisarView = kotlin.checkNotNull(mPesquisarView)
-        this.linhaDAO = kotlin.checkNotNull(linhaDAO)
         this.favoritoDAO = kotlin.checkNotNull(favoritoDAO)
         this.fragmentManager = kotlin.checkNotNull(fragmentManager)
         this.dataBaseReference = kotlin.checkNotNull(dataBaseReference)
@@ -144,10 +140,9 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
         val filtro = mPesquisarView.selecionarFiltros()
 
         if (filtro.adicionarFavoritos!!) {
-           /* val numeroLinha = recuperarNumeroLinha (filtro.linha)
-            var favorito = Favorito(numeroLinha, filtro.sentido)
+            var favorito = Favorito(null, filtro.sentido, filtro.linha, filtro.url)
             favorito = favoritoDAO.salvar(favorito)
-            Log.d("Favorito", favorito.toString())*/
+            Log.d("Favorito", favorito.toString())
         }
         Log.d("Filtros", filtro.toString())
         abrirMapa(filtro.linha, filtro.sentido, filtro.url)
