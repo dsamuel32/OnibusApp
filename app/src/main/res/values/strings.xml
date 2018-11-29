@@ -15,6 +15,9 @@
     <string name="btn_cancelar">Cancelar</string>
     <string name="lb_confirmar">Confirmação</string>
     <string name="msg_deseja_excluir_favoritos">Deseja excluir o linha dos favoritos?</string>
+    <string name="erro_carregar_linhas">Erro ao carregar as linhas</string>
+    <string name="tente_novamente">Tente novamente</string>
+    <string name="erro_carregar_linhas_carinha_triste">:(</string>
 
     <string name="vw_empresa">Empresa</string>
     <string name="vw_linha">Linha</string>

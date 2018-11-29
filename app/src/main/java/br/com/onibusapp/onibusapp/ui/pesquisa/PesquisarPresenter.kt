@@ -13,6 +13,7 @@ import br.com.onibusapp.onibusapp.ui.pesquisa.PesquisarContract.Presenter.Compan
 import br.com.onibusapp.onibusapp.utils.Constantes
 import br.com.onibusapp.onibusapp.utils.DataUtil
 import br.com.onibusapp.onibusapp.utils.FragmentUtil
+import br.com.onibusapp.onibusapp.utils.RedeUtil
 import com.google.firebase.database.*
 
 /**
@@ -37,7 +38,16 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
         this.favoritoDAO = kotlin.checkNotNull(favoritoDAO)
         this.fragmentManager = kotlin.checkNotNull(fragmentManager)
         this.dataBaseReference = kotlin.checkNotNull(dataBaseReference)
-        this.dataBaseReference.addValueEventListener(this.fireBaseListener())
+
+        val redeUtil = RedeUtil(mPesquisarView.getCurrentActivity())
+        if (redeUtil.isNetworkConnected()) {
+            this.mPesquisarView.mostrarProgressBarCarregarEmpresas()
+            this.dataBaseReference.addValueEventListener(this.fireBaseListener())
+        } else {
+            this.mPesquisarView.fecharProgressBarCarregarEmpresas()
+            this.mPesquisarView.exibirLayoutErroCarregarEmpresas()
+        }
+
     }
 
     override fun recuperarDadosFireBase() {
@@ -51,17 +61,19 @@ class PesquisarPresenter(mPesquisarView: PesquisarContract.View,
         val listener = object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                mPesquisarView.fecharProgressBarCarregarEmpresas()
                 if (dataSnapshot.exists()) {
                     montarDadosFiltros(dataSnapshot)
                     var nomesEmpresas = montarListaNomeEmprasas(empresas)
                     mPesquisarView.atualizarSpinnerEmpresa(nomesEmpresas)
                     selecionarEmpresa(0)
-
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.d("ERRO", "Erro recuperar dados Firebase")
+                mPesquisarView.fecharProgressBarCarregarEmpresas()
+                mPesquisarView.exibirLayoutErroCarregarEmpresas()
             }
         }
 

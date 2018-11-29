@@ -27,7 +27,7 @@ class Conversor {
         val listaOnibus: MutableList<Onibus> = arrayListOf()
         val stringUtils: StringUtils = StringUtils()
         for (dados in dfTransResposta.dados) {
-            if (dados[5] != null) {
+            if (dados[5] != null && this.isExisteLocalizacao(dados[2], dados[3])) {
                 val onibus = Onibus(dados[0],
                                     dados[1],
                                     stringUtils.toDouble(dados[2]),
@@ -43,4 +43,13 @@ class Conversor {
 
          return listaOnibus
     }
+
+    fun isExisteLocalizacao(lat: String, lon: String): Boolean {
+        return isPreenchido(lat) && isPreenchido(lon)
+    }
+
+    fun isPreenchido(localizacao: String): Boolean {
+        return localizacao != null && localizacao.isNotEmpty()
+    }
+
 }

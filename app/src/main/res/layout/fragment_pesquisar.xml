@@ -7,9 +7,11 @@
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
+        android:id="@+id/rl_formulario"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tw_empresa"
@@ -34,41 +36,33 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/sp_empresa"
             android:layout_marginTop="19dp"
-            android:text="@string/vw_linha" />
+            android:text="@string/vw_linha"/>
 
-        <Spinner
+        <!--<Spinner
             android:id="@+id/sp_linha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tw_linha"
             android:layout_marginTop="19dp"
-            android:prompt="@string/sp_prompt_linha" />
+            android:prompt="@string/sp_prompt_linha" />-->
 
-        <TextView
-            android:id="@+id/tw_percurso"
+        <AutoCompleteTextView
+            android:id="@+id/inp_linha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/sp_linha"
-            android:layout_marginTop="21dp"
-            android:text="@string/vw_percurso" />
-
-        <Spinner
-            android:id="@+id/sp_sentido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tw_percurso"
-            android:layout_marginTop="19dp"
-            android:entries="@array/sentido" />
+            android:layout_below="@+id/tw_linha"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="1dp"
+            android:ems="1" />
 
         <CheckBox
             android:id="@+id/cbx_add_favoritos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/sp_sentido"
+            android:layout_below="@+id/inp_linha"
             android:layout_marginTop="20dp"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/cbx_add_favoritos" />
@@ -84,79 +78,56 @@
             android:text="@string/btn_pesquisar" />
 
     </RelativeLayout>
-    <!-- <LinearLayout
-         android:orientation="vertical"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:padding="20dp">
+    <RelativeLayout
+        android:id="@+id/rl_erro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="10dp"
+        android:visibility="gone">
 
-         <TextView
-             android:id="@+id/tw_empresa"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:text="@string/vw_empresa"
-             android:layout_marginTop="20dp"/>
+        <TextView
+            android:id="@+id/txv_erro_texto"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/erro_carregar_linhas"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="70dp"
+            android:gravity="center"
+            android:textSize="12pt"/>
 
-         <Spinner
-             android:id="@+id/sp_empresa"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:entries="@array/empresas"
-             android:prompt="@string/sp_prompt_empresas"
-             android:layout_marginTop="20dp"
-             android:layout_marginBottom="15dp"/>
+        <TextView
+            android:id="@+id/tv_tente_novamente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@+id/txv_erro_texto"
+            android:textSize="12pt"
+            android:text="@string/tente_novamente" />
 
-         <TextView
-             android:id="@+id/tw_linha"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="10dp"
-             android:text="@string/vw_linha" />
-
-
-         <Spinner
-             android:id="@+id/sp_linha"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:prompt="@string/sp_prompt_linha"
-             android:layout_marginTop="15dp"
-             android:layout_marginBottom="15dp"/>
-
-         <TextView
-             android:id="@+id/tw_percurso"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="10dp"
-             android:text="@string/vw_percurso" />
-
-         <Spinner
-             android:id="@+id/sp_sentido"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="15dp"
-             android:layout_marginBottom="15dp"
-             android:entries="@array/sentido"/>
-
-         <CheckBox
-             android:id="@+id/cbx_add_favoritos"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:buttonTint="@color/colorPrimary"
-             android:layout_marginTop="15dp"
-             android:layout_marginBottom="15dp"
-             android:text="@string/cbx_add_favoritos" />
-
-         <Button
-             android:id="@+id/btn_pesquisar"
-             style="@style/Widget.AppCompat.Button.Colored"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="45dp"
-             android:background="@color/colorPrimary"
-             android:text="@string/btn_pesquisar" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@+id/tv_tente_novamente"
+            android:textSize="30pt"
+            android:text="@string/erro_carregar_linhas_carinha_triste" />
 
 
+    </RelativeLayout>
 
-     </LinearLayout>-->
+
+    <ProgressBar
+        android:id="@+id/pb_carregar_empresa"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>
