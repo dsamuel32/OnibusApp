@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
@@ -125,11 +126,13 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
     }
 
     override fun addMarker(latLng: LatLng, linha: String, prefixo: String) {
-        mMap!!.addMarker(MarkerOptions().position(latLng).title("$linha - $prefixo"))
+        mMap!!.addMarker(MarkerOptions().position(latLng).title("$linha - $prefixo")).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.round_directions_bus_black_18dp))
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        this.limparMapa()
+
         if (timer != null) {
             timer!!.cancel()
             timer!!.purge()
