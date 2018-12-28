@@ -11,13 +11,13 @@ class DataUtil {
     var mapaDiasSemana: MutableMap<Int, String> = mutableMapOf()
 
     init {
-        this.mapaDiasSemana.put(0, DOMINGO)
-        this.mapaDiasSemana.put(1, SEGUNDA_SEXTA)
+        this.mapaDiasSemana.put(1, DOMINGO)
         this.mapaDiasSemana.put(2, SEGUNDA_SEXTA)
         this.mapaDiasSemana.put(3, SEGUNDA_SEXTA)
         this.mapaDiasSemana.put(4, SEGUNDA_SEXTA)
         this.mapaDiasSemana.put(5, SEGUNDA_SEXTA)
-        this.mapaDiasSemana.put(6, SABADO)
+        this.mapaDiasSemana.put(6, SEGUNDA_SEXTA)
+        this.mapaDiasSemana.put(7, SABADO)
     }
 
     fun recuperarDiaSemana(): String {

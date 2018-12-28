@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.util.Log
+import android.widget.Toast
 import br.com.onibusapp.onibusapp.data.dominio.EmpresaEnum
 import br.com.onibusapp.onibusapp.utils.Constantes
 import br.com.onibusapp.onibusapp.utils.Conversor
@@ -59,15 +60,18 @@ class MapsPresenter(mMapsView: MapsContract.View) : MapsContract.Presenter {
                     mMapsView.limparMapa()
                     getLocalizacaoUsuario(false)
                     Conversor().from(response)
-                            .toListOnibus()
-                            .filter { onibus -> linha == onibus.linha }
-                            .forEach { onibus ->
-                                Log.d("MARCANDO", onibus.linha)
-                                val localizacao = LatLng(onibus.latitude, onibus.longitude)
-                                mMapsView.addMarker(localizacao, onibus.linha, onibus.prefixo)
-                            }
-                }, Response.ErrorListener { error -> Log.e("ERRO", error.message) })
-
+                               .toListOnibus()
+                               .filter { onibus -> linha == onibus.linha }
+                               .forEach { onibus ->
+                                    Log.d("MARCANDO", onibus.linha)
+                                    val localizacao = LatLng(onibus.latitude, onibus.longitude)
+                                    mMapsView.addMarker(localizacao, onibus.linha, onibus.prefixo)
+                               }
+                }, Response.ErrorListener {
+                        Toast.makeText(this.mMapsView.getCurrentActivity(),
+                                  "Erro ao se conectar ao servidor do DFTrans",
+                                       Toast.LENGTH_LONG).show()
+                })
         queue.add(stringRequest)
     }
 }
