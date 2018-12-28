@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import br.com.onibusapp.onibusapp.R
 import br.com.onibusapp.onibusapp.ui.mapa.MapsContract
 import br.com.onibusapp.onibusapp.ui.mapa.MapsPresenter
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit
 class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private var mMap: GoogleMap? = null
+    private var tvLinha: TextView? = null
     private var mMapsPresenter: MapsContract.Presenter? = null
     private var timer: Timer? = null
 
@@ -41,6 +43,12 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
         mapView.onCreate(savedInstanceState)
         mapView.onResume()
         mapView.getMapAsync(this)
+
+        val layoutDadosLinha = view.findViewById<View>(R.id.dadosLinha)
+        layoutDadosLinha.bringToFront()
+
+        tvLinha = view.findViewById<View>(R.id.tv_linha) as TextView
+
         this.mMapsPresenter = MapsPresenter(this)
         getParametros()
         val navigation = activity.findViewById<View>(R.id.navigation) as BottomNavigationView
@@ -55,6 +63,7 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
             val sentido = bundle.getInt(Constantes.SENTIDO)
             val url = bundle.getString(Constantes.URL)
             Log.d("PARAMENTROS", "$linha $sentido $url")
+            tvLinha!!.setText(linha)
             timer = Timer()
             timer!!.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
