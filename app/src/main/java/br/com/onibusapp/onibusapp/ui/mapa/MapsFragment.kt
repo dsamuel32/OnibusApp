@@ -11,11 +11,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import br.com.onibusapp.onibusapp.R
 import br.com.onibusapp.onibusapp.ui.mapa.MapsContract
 import br.com.onibusapp.onibusapp.ui.mapa.MapsPresenter
 import br.com.onibusapp.onibusapp.utils.Constantes
+import br.com.onibusapp.onibusapp.utils.ContadorAtualizacao
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -32,8 +34,11 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
 
     private var mMap: GoogleMap? = null
     private var tvLinha: TextView? = null
+    private var tvTempoAtualizaca: TextView? = null
+    private var progressBar: ProgressBar? = null
     private var mMapsPresenter: MapsContract.Presenter? = null
     private var timer: Timer? = null
+    private var contadorAtualizacao: ContadorAtualizacao? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,10 +49,15 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
         mapView.onResume()
         mapView.getMapAsync(this)
 
+        val layoutDadosAtualizacao = view.findViewById<View>(R.id.dadosAtualizacao)
+        layoutDadosAtualizacao.bringToFront()
+
         val layoutDadosLinha = view.findViewById<View>(R.id.dadosLinha)
         layoutDadosLinha.bringToFront()
 
         tvLinha = view.findViewById<View>(R.id.tv_linha) as TextView
+        tvTempoAtualizaca = view.findViewById<View>(R.id.tv_tempo_atualizacao) as TextView
+        progressBar = view.findViewById<View>(R.id.progress_atualizacao) as ProgressBar
 
         this.mMapsPresenter = MapsPresenter(this)
         getParametros()
@@ -65,10 +75,18 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
             Log.d("PARAMENTROS", "$linha $sentido $url")
             tvLinha!!.setText(linha)
             timer = Timer()
+            contadorAtualizacao = ContadorAtualizacao(tvTempoAtualizaca!!, progressBar!!, 20000, 1000)
             timer!!.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
+
+                    contadorAtualizacao!!.iniciar()
+
                     Log.d("Timer", "EXECUTOU")
                     mMapsPresenter!!.getLocalizacaoOnibus(linha, sentido, url)
+                    //contadorAtualizacao!!.onFinish()
+                    /*contadorAtualizacao = ContadorAtualizacao(tvTempoAtualizaca!!, 20000, 1000, true)
+                    contadorAtualizacao!!.create()*/
+
                     //tempoAtualizacao();
                 }
             }, 0, TimeUnit.SECONDS.toMillis(20))
@@ -148,14 +166,10 @@ class MapsFragment : Fragment(), MapsContract.View, OnMapReadyCallback, GoogleAp
         }
         mMapsPresenter = null
 
-    }
+        if (contadorAtualizacao != null) {
+            this.contadorAtualizacao!!.onFinish()
+        }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
 }

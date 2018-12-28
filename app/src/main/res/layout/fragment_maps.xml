@@ -49,6 +49,39 @@
 
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/dadosAtualizacao"
+            android:layout_width="117dp"
+            android:layout_height="105dp"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/tv_tempo_atualizacao"
+                android:layout_width="72dp"
+                android:layout_height="65dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <ProgressBar
+                android:id="@+id/progress_atualizacao"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:max="20"
+                android:progress="20"
+                android:progressDrawable="@drawable/circular_progressbar"
+                android:visibility="invisible" />
+
+
+        </FrameLayout>
+
 
     </RelativeLayout>
 
